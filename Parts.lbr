@@ -1123,6 +1123,14 @@ MAX3223-MAX3243.pdf</description>
 <rectangle x1="-1.7266" y1="2.2828" x2="-1.5234" y2="3.121" layer="51"/>
 <rectangle x1="-2.3766" y1="2.2828" x2="-2.1734" y2="3.121" layer="51"/>
 </package>
+<package name="INS-1">
+<circle x="0" y="0" radius="3.4925" width="0.127" layer="21"/>
+<pad name="A" x="0" y="2.54" drill="0.8" shape="square"/>
+<pad name="C" x="0" y="-2.54" drill="0.8"/>
+<wire x1="-1.27" y1="0.635" x2="0" y2="0.635" width="0.127" layer="21"/>
+<wire x1="0" y1="0.635" x2="1.27" y2="0.635" width="0.127" layer="21"/>
+<wire x1="0" y1="0.635" x2="0" y2="1.651" width="0.127" layer="21"/>
+</package>
 </packages>
 <symbols>
 <symbol name="HV5530">
@@ -1213,6 +1221,16 @@ MAX3223-MAX3243.pdf</description>
 <pin name="GND" x="-5.08" y="-25.4" length="middle" direction="pwr"/>
 <pin name="OUT_VDD" x="27.94" y="-27.94" length="middle" direction="pwr" rot="R180"/>
 <pin name="SELECT" x="-5.08" y="-20.32" length="middle"/>
+</symbol>
+<symbol name="NIXIE_INDICATOR">
+<pin name="A" x="-12.7" y="0" length="middle"/>
+<pin name="C" x="12.7" y="0" length="middle" rot="R180"/>
+<wire x1="-7.62" y1="5.08" x2="-7.62" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="-7.62" y1="-5.08" x2="7.62" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="7.62" y1="-5.08" x2="7.62" y2="5.08" width="0.254" layer="94"/>
+<wire x1="7.62" y1="5.08" x2="-7.62" y2="5.08" width="0.254" layer="94"/>
+<text x="-7.62" y="7.62" size="1.778" layer="95">&gt;Name</text>
+<text x="-7.62" y="-7.62" size="1.778" layer="96">&gt;Value</text>
 </symbol>
 </symbols>
 <devicesets>
@@ -1358,6 +1376,22 @@ MAX3223-MAX3243.pdf</description>
 <technology name="">
 <attribute name="MOUSER" value="595-CD4504BPWR"/>
 </technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="INS-1">
+<gates>
+<gate name="G$1" symbol="NIXIE_INDICATOR" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="INS-1">
+<connects>
+<connect gate="G$1" pin="A" pad="A"/>
+<connect gate="G$1" pin="C" pad="C"/>
+</connects>
+<technologies>
+<technology name=""/>
 </technologies>
 </device>
 </devices>

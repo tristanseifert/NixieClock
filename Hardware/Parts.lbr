@@ -3409,6 +3409,58 @@ square</description>
 </device>
 </devices>
 </deviceset>
+<deviceset name="AS6C1008" prefix="IC" uservalue="yes">
+<description>&lt;h1&gt;AS6C1008 – 128K x 8 Low Power SRAM&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://www.mouser.com/datasheet/2/12/AS6C1008feb2007-1511508.pdf"&gt;Datasheet&lt;/a&gt;&lt;/p&gt;</description>
+<gates>
+<gate name="G$1" symbol="CY62128B" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="DIL32">
+<connects>
+<connect gate="G$1" pin="!CE1" pad="22"/>
+<connect gate="G$1" pin="!OE" pad="24"/>
+<connect gate="G$1" pin="!WE" pad="29"/>
+<connect gate="G$1" pin="A0" pad="12"/>
+<connect gate="G$1" pin="A1" pad="11"/>
+<connect gate="G$1" pin="A10" pad="23"/>
+<connect gate="G$1" pin="A11" pad="25"/>
+<connect gate="G$1" pin="A12" pad="4"/>
+<connect gate="G$1" pin="A13" pad="28"/>
+<connect gate="G$1" pin="A14" pad="3"/>
+<connect gate="G$1" pin="A15" pad="31"/>
+<connect gate="G$1" pin="A16" pad="2"/>
+<connect gate="G$1" pin="A2" pad="10"/>
+<connect gate="G$1" pin="A3" pad="9"/>
+<connect gate="G$1" pin="A4" pad="8"/>
+<connect gate="G$1" pin="A5" pad="7"/>
+<connect gate="G$1" pin="A6" pad="6"/>
+<connect gate="G$1" pin="A7" pad="5"/>
+<connect gate="G$1" pin="A8" pad="27"/>
+<connect gate="G$1" pin="A9" pad="26"/>
+<connect gate="G$1" pin="CE2" pad="30"/>
+<connect gate="G$1" pin="D0" pad="13"/>
+<connect gate="G$1" pin="D1" pad="14"/>
+<connect gate="G$1" pin="D2" pad="15"/>
+<connect gate="G$1" pin="D3" pad="17"/>
+<connect gate="G$1" pin="D4" pad="18"/>
+<connect gate="G$1" pin="D5" pad="19"/>
+<connect gate="G$1" pin="D6" pad="20"/>
+<connect gate="G$1" pin="D7" pad="21"/>
+<connect gate="G$1" pin="GND" pad="16"/>
+<connect gate="G$1" pin="VCC" pad="32"/>
+</connects>
+<package3dinstances>
+<package3dinstance package3d_urn="urn:adsk.eagle:package:18076/2"/>
+</package3dinstances>
+<technologies>
+<technology name="">
+<attribute name="MOUSER" value="913-AS6C1008-55PCN" constant="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
 </devicesets>
 </library>
 </drawing>

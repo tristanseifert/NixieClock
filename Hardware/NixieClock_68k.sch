@@ -22339,6 +22339,26 @@ Based on  the following source:
 <part name="GND23" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="P+23" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="GND24" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
+<part name="R5" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R2012" package3d_urn="urn:adsk.eagle:package:23543/2" value="10k">
+<spice>
+<pinmapping spiceprefix="R">
+<pinmap gate="G$1" pin="1" pinorder="1"/>
+<pinmap gate="G$1" pin="2" pinorder="2"/>
+</pinmapping>
+</spice>
+<attribute name="MOUSER" value="652-CR0805FX-1002ELF"/>
+</part>
+<part name="R6" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R2012" package3d_urn="urn:adsk.eagle:package:23543/2" value="10k">
+<spice>
+<pinmapping spiceprefix="R">
+<pinmap gate="G$1" pin="1" pinorder="1"/>
+<pinmap gate="G$1" pin="2" pinorder="2"/>
+</pinmapping>
+</spice>
+<attribute name="MOUSER" value="652-CR0805FX-1002ELF"/>
+</part>
+<part name="GND27" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
+<part name="P+30" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -23627,6 +23647,22 @@ SV6: Side buttons</text>
 <instance part="P+23" gate="1" x="198.12" y="99.06" smashed="yes" rot="R90">
 <attribute name="VALUE" x="195.58" y="99.06" size="1.778" layer="96" rot="R180"/>
 </instance>
+<instance part="R5" gate="G$1" x="50.8" y="109.22" smashed="yes">
+<attribute name="NAME" x="46.99" y="110.7186" size="1.778" layer="95"/>
+<attribute name="VALUE" x="46.99" y="105.918" size="1.778" layer="96"/>
+<attribute name="MOUSER" x="50.8" y="109.22" size="1.778" layer="96" align="top-left" display="off"/>
+</instance>
+<instance part="R6" gate="G$1" x="50.8" y="101.6" smashed="yes">
+<attribute name="NAME" x="46.99" y="103.0986" size="1.778" layer="95"/>
+<attribute name="VALUE" x="46.99" y="98.298" size="1.778" layer="96"/>
+<attribute name="MOUSER" x="50.8" y="101.6" size="1.778" layer="96" align="top-left" display="off"/>
+</instance>
+<instance part="GND27" gate="1" x="58.42" y="109.22" smashed="yes" rot="R90">
+<attribute name="VALUE" x="60.96" y="106.68" size="1.778" layer="96" rot="R90"/>
+</instance>
+<instance part="P+30" gate="1" x="58.42" y="101.6" smashed="yes" rot="R270">
+<attribute name="VALUE" x="58.42" y="101.6" size="1.778" layer="96"/>
+</instance>
 </instances>
 <busses>
 <bus name="A[0..19],D[0..7],!OE,!RESET,!RTC_CS,R/!W!,!USB_RD,!USB_RXF,!USB_TXE,USB_WR">
@@ -24039,6 +24075,10 @@ SV6: Side buttons</text>
 <pinref part="SV6" gate="G$1" pin="6"/>
 <pinref part="P+23" gate="1" pin="+5V"/>
 </segment>
+<segment>
+<pinref part="R6" gate="G$1" pin="2"/>
+<pinref part="P+30" gate="1" pin="+5V"/>
+</segment>
 </net>
 <net name="GND" class="0">
 <segment>
@@ -24122,6 +24162,10 @@ SV6: Side buttons</text>
 <pinref part="SV6" gate="G$1" pin="5"/>
 <pinref part="GND23" gate="1" pin="GND"/>
 </segment>
+<segment>
+<pinref part="R5" gate="G$1" pin="2"/>
+<pinref part="GND27" gate="1" pin="GND"/>
+</segment>
 </net>
 <net name="!NIXIE_CS" class="0">
 <segment>
@@ -24178,12 +24222,22 @@ SV6: Side buttons</text>
 <wire x1="60.96" y1="139.7" x2="66.04" y2="139.7" width="0.1524" layer="91"/>
 <wire x1="66.04" y1="139.7" x2="68.58" y2="137.16" width="0.1524" layer="91"/>
 </segment>
+<segment>
+<pinref part="R6" gate="G$1" pin="1"/>
+<wire x1="45.72" y1="101.6" x2="40.64" y2="101.6" width="0.1524" layer="91"/>
+<label x="40.64" y="101.6" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
 </net>
 <net name="!USB_TXE" class="0">
 <segment>
 <pinref part="IC5" gate="G$1" pin="!TXE"/>
 <wire x1="60.96" y1="137.16" x2="66.04" y2="137.16" width="0.1524" layer="91"/>
 <wire x1="66.04" y1="137.16" x2="68.58" y2="134.62" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="R5" gate="G$1" pin="1"/>
+<wire x1="45.72" y1="109.22" x2="40.64" y2="109.22" width="0.1524" layer="91"/>
+<label x="40.64" y="109.22" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 <net name="USB+" class="0">

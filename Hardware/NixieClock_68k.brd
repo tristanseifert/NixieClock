@@ -3129,6 +3129,18 @@ Based on  the following source:
 <attribute name="SPICEPREFIX" value="C" x="10.795" y="36.195" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="VALUE" x="8.255" y="37.465" size="1.27" layer="27" rot="R270"/>
 </element>
+<element name="R5" library="rcl" library_urn="urn:adsk.eagle:library:334" package="R2012" package3d_urn="urn:adsk.eagle:package:23543/2" value="10k" x="-106.68" y="-3.81" smashed="yes">
+<attribute name="MOUSER" value="652-CR0805FX-1002ELF" x="-106.68" y="-3.81" size="1.778" layer="27" display="off"/>
+<attribute name="NAME" x="-107.315" y="-2.54" size="1.27" layer="25"/>
+<attribute name="SPICEPREFIX" value="R" x="-106.68" y="-3.81" size="1.778" layer="27" display="off"/>
+<attribute name="VALUE" x="-107.315" y="-6.35" size="1.27" layer="27"/>
+</element>
+<element name="R6" library="rcl" library_urn="urn:adsk.eagle:library:334" package="R2012" package3d_urn="urn:adsk.eagle:package:23543/2" value="10k" x="-106.68" y="-10.16" smashed="yes">
+<attribute name="MOUSER" value="652-CR0805FX-1002ELF" x="-106.68" y="-10.16" size="1.778" layer="27" display="off"/>
+<attribute name="NAME" x="-107.315" y="-8.89" size="1.27" layer="25"/>
+<attribute name="SPICEPREFIX" value="R" x="-106.68" y="-10.16" size="1.778" layer="27" display="off"/>
+<attribute name="VALUE" x="-107.315" y="-12.7" size="1.27" layer="27"/>
+</element>
 </elements>
 <signals>
 <signal name="+5V">
@@ -3247,6 +3259,7 @@ Based on  the following source:
 <wire x1="55.88" y1="29.21" x2="57.15" y2="30.48" width="0.2032" layer="1"/>
 <wire x1="44.79" y1="23.835" x2="45.085" y2="24.13" width="0.2032" layer="1"/>
 <wire x1="40.19" y1="23.835" x2="44.79" y2="23.835" width="0.2032" layer="1"/>
+<contactref element="R6" pad="2"/>
 <wire x1="63.82" y1="91.44" x2="64.6" y2="86.36" width="0" layer="19" extent="1-1"/>
 <wire x1="17.78" y1="69.85" x2="7.62" y2="74.93" width="0" layer="19" extent="1-1"/>
 <wire x1="25.4" y1="80.01" x2="17.78" y2="69.85" width="0" layer="19" extent="1-1"/>
@@ -3282,6 +3295,7 @@ Based on  the following source:
 <wire x1="-106.36" y1="109.22" x2="-100.01" y2="109.22" width="0" layer="19" extent="1-1"/>
 <wire x1="-108.18" y1="99.06" x2="-106.36" y2="109.22" width="0" layer="19" extent="1-1"/>
 <wire x1="-103.1" y1="99.06" x2="-108.18" y2="99.06" width="0" layer="19" extent="1-1"/>
+<wire x1="-105.83" y1="-10.16" x2="-108.18" y2="99.06" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="GND">
 <contactref element="C5" pad="2"/>
@@ -3371,24 +3385,26 @@ Based on  the following source:
 <via x="38.1" y="25.4" extent="1-16" drill="0.35"/>
 <via x="34.29" y="16.51" extent="1-16" drill="0.35"/>
 <via x="41.91" y="20.32" extent="1-16" drill="0.35"/>
-<wire x1="-23.18" y1="116.84" x2="-16.83" y2="116.84" width="0" layer="19" extent="1-1"/>
+<contactref element="R5" pad="2"/>
+<wire x1="-105.18" y1="99.06" x2="-105.83" y2="-3.81" width="0" layer="19" extent="1-1"/>
+<wire x1="-100.1" y1="99.06" x2="-105.18" y2="99.06" width="0" layer="19" extent="1-1"/>
+<wire x1="-104.46" y1="109.22" x2="-105.18" y2="99.06" width="0" layer="19" extent="1-1"/>
+<wire x1="-98.11" y1="109.22" x2="-104.46" y2="109.22" width="0" layer="19" extent="1-1"/>
+<wire x1="-86.68" y1="116.84" x2="-98.11" y2="109.22" width="0" layer="19" extent="1-1"/>
+<wire x1="-73.98" y1="116.84" x2="-86.68" y2="116.84" width="0" layer="19" extent="1-1"/>
+<wire x1="-67.63" y1="116.84" x2="-73.98" y2="116.84" width="0" layer="19" extent="1-1"/>
+<wire x1="-61.28" y1="116.84" x2="-67.63" y2="116.84" width="0" layer="19" extent="1-1"/>
+<wire x1="-54.93" y1="116.84" x2="-61.28" y2="116.84" width="0" layer="19" extent="1-1"/>
+<wire x1="-48.58" y1="116.84" x2="-54.93" y2="116.84" width="0" layer="19" extent="1-1"/>
+<wire x1="-42.23" y1="116.84" x2="-48.58" y2="116.84" width="0" layer="19" extent="1-1"/>
+<wire x1="-35.88" y1="116.84" x2="-42.23" y2="116.84" width="0" layer="19" extent="1-1"/>
+<wire x1="-31.43" y1="116.84" x2="-35.88" y2="116.84" width="0" layer="19" extent="1-1"/>
+<wire x1="-53.76" y1="123.19" x2="-54.93" y2="116.84" width="0" layer="19" extent="1-1"/>
+<wire x1="-23.18" y1="116.84" x2="-31.43" y2="116.84" width="0" layer="19" extent="1-1"/>
+<wire x1="-16.83" y1="116.84" x2="-23.18" y2="116.84" width="0" layer="19" extent="1-1"/>
 <wire x1="-23.9" y1="109.22" x2="-23.18" y2="116.84" width="0" layer="19" extent="1-1"/>
 <wire x1="-18.82" y1="109.22" x2="-23.9" y2="109.22" width="0" layer="19" extent="1-1"/>
 <wire x1="-13.74" y1="109.22" x2="-18.82" y2="109.22" width="0" layer="19" extent="1-1"/>
-<wire x1="-31.43" y1="116.84" x2="-23.18" y2="116.84" width="0" layer="19" extent="1-1"/>
-<wire x1="-35.88" y1="116.84" x2="-31.43" y2="116.84" width="0" layer="19" extent="1-1"/>
-<wire x1="-42.23" y1="116.84" x2="-35.88" y2="116.84" width="0" layer="19" extent="1-1"/>
-<wire x1="-48.58" y1="116.84" x2="-42.23" y2="116.84" width="0" layer="19" extent="1-1"/>
-<wire x1="-54.93" y1="116.84" x2="-48.58" y2="116.84" width="0" layer="19" extent="1-1"/>
-<wire x1="-61.28" y1="116.84" x2="-54.93" y2="116.84" width="0" layer="19" extent="1-1"/>
-<wire x1="-67.63" y1="116.84" x2="-61.28" y2="116.84" width="0" layer="19" extent="1-1"/>
-<wire x1="-73.98" y1="116.84" x2="-67.63" y2="116.84" width="0" layer="19" extent="1-1"/>
-<wire x1="-53.76" y1="123.19" x2="-54.93" y2="116.84" width="0" layer="19" extent="1-1"/>
-<wire x1="-86.68" y1="116.84" x2="-73.98" y2="116.84" width="0" layer="19" extent="1-1"/>
-<wire x1="-98.11" y1="109.22" x2="-86.68" y2="116.84" width="0" layer="19" extent="1-1"/>
-<wire x1="-104.46" y1="109.22" x2="-98.11" y2="109.22" width="0" layer="19" extent="1-1"/>
-<wire x1="-105.18" y1="99.06" x2="-104.46" y2="109.22" width="0" layer="19" extent="1-1"/>
-<wire x1="-100.1" y1="99.06" x2="-105.18" y2="99.06" width="0" layer="19" extent="1-1"/>
 <wire x1="-72.9488" y1="96.7994" x2="-73.98" y2="116.84" width="0" layer="19" extent="1-1"/>
 <wire x1="-79.4512" y1="96.7994" x2="-72.9488" y2="96.7994" width="0" layer="19" extent="1-1"/>
 <wire x1="10.16" y1="82.55" x2="-13.74" y2="109.22" width="0" layer="19" extent="1-1"/>
@@ -4098,7 +4114,7 @@ Based on  the following source:
 <signal name="A19">
 <contactref element="IC1" pad="19"/>
 <contactref element="IC7" pad="9"/>
-<wire x1="25.4" y1="72.39" x2="48.26" y2="95.25" width="0" layer="19" extent="1-1"/>
+<wire x1="48.26" y1="95.25" x2="25.4" y2="72.39" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="!IPL1">
 <contactref element="IC1" pad="41"/>
@@ -4308,7 +4324,9 @@ Based on  the following source:
 <via x="41.91" y="22.225" extent="1-16" drill="0.35"/>
 <wire x1="41.91" y1="22.225" x2="41.57" y2="21.885" width="0.2032" layer="1"/>
 <wire x1="41.57" y1="21.885" x2="40.19" y2="21.885" width="0.2032" layer="1"/>
-<wire x1="41.91" y1="31.75" x2="12.7" y2="85.09" width="0" layer="19" extent="1-1"/>
+<contactref element="R6" pad="1"/>
+<wire x1="40.19" y1="21.885" x2="-107.53" y2="-10.16" width="0" layer="19" extent="1-1"/>
+<wire x1="12.7" y1="85.09" x2="41.91" y2="31.75" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="!USB_TXE">
 <contactref element="IC5" pad="22"/>
@@ -4320,7 +4338,9 @@ Based on  the following source:
 <wire x1="38.425" y1="22.535" x2="38.1" y2="22.86" width="0.2032" layer="1"/>
 <via x="38.1" y="22.86" extent="1-16" drill="0.35"/>
 <wire x1="38.1" y1="22.86" x2="34.925" y2="22.86" width="0.2032" layer="16"/>
-<wire x1="34.29" y1="31.75" x2="12.7" y2="82.55" width="0" layer="19" extent="1-1"/>
+<contactref element="R5" pad="1"/>
+<wire x1="34.29" y1="23.495" x2="-107.53" y2="-3.81" width="0" layer="19" extent="1-16"/>
+<wire x1="12.7" y1="82.55" x2="34.29" y2="31.75" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="USB+">
 <contactref element="IC5" pad="15"/>

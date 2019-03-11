@@ -24789,7 +24789,7 @@ SV6: Side buttons</text>
 </instance>
 </instances>
 <busses>
-<bus name="!68681_CS,!68681_DTACK,!68681_IACK,68681_X[1..2],A[0..19],D[0..7],!IPL1,!OE,!RESET,!RTC_CS,R/!W!,STATUS[0..3],UART0_RX,UART0_TX,UART1_RX,UART1_TX,!VFD_RESET">
+<bus name="!68681_CS,!68681_DTACK,!68681_IACK,68681_X[1..2],A[0..19],D[0..7],!IPL1,!OE,!RESET,!RTC_CS,R/!W!,STATUS[0..3],UART0_RX,UART1_TX,!VFD_RESET">
 <segment>
 <wire x1="25.4" y1="177.8" x2="68.58" y2="177.8" width="0.762" layer="92"/>
 <wire x1="68.58" y1="177.8" x2="71.12" y2="177.8" width="0.762" layer="92"/>
@@ -25488,9 +25488,9 @@ SV6: Side buttons</text>
 <wire x1="66.04" y1="170.18" x2="68.58" y2="167.64" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="SV5" gate="G$1" pin="1"/>
-<wire x1="215.9" y1="127" x2="220.98" y2="127" width="0.1524" layer="91"/>
-<label x="220.98" y="127" size="1.778" layer="95" xref="yes"/>
+<pinref part="SV5" gate="G$1" pin="3"/>
+<wire x1="215.9" y1="129.54" x2="220.98" y2="129.54" width="0.1524" layer="91"/>
+<label x="220.98" y="129.54" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="UART0_RX" class="0">
@@ -25500,9 +25500,9 @@ SV6: Side buttons</text>
 <wire x1="66.04" y1="167.64" x2="68.58" y2="165.1" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="SV5" gate="G$1" pin="2"/>
-<wire x1="200.66" y1="127" x2="195.58" y2="127" width="0.1524" layer="91"/>
-<label x="195.58" y="127" size="1.778" layer="95" rot="R180" xref="yes"/>
+<pinref part="SV5" gate="G$1" pin="4"/>
+<wire x1="200.66" y1="129.54" x2="195.58" y2="129.54" width="0.1524" layer="91"/>
+<label x="195.58" y="129.54" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 <net name="UART1_TX" class="0">
@@ -25512,9 +25512,9 @@ SV6: Side buttons</text>
 <wire x1="66.04" y1="165.1" x2="68.58" y2="162.56" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="SV5" gate="G$1" pin="3"/>
-<wire x1="215.9" y1="129.54" x2="220.98" y2="129.54" width="0.1524" layer="91"/>
-<label x="220.98" y="129.54" size="1.778" layer="95" xref="yes"/>
+<pinref part="SV5" gate="G$1" pin="1"/>
+<wire x1="215.9" y1="127" x2="220.98" y2="127" width="0.1524" layer="91"/>
+<label x="220.98" y="127" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="UART1_RX" class="0">
@@ -25524,9 +25524,9 @@ SV6: Side buttons</text>
 <wire x1="66.04" y1="162.56" x2="68.58" y2="160.02" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="SV5" gate="G$1" pin="4"/>
-<wire x1="200.66" y1="129.54" x2="195.58" y2="129.54" width="0.1524" layer="91"/>
-<label x="195.58" y="129.54" size="1.778" layer="95" rot="R180" xref="yes"/>
+<pinref part="SV5" gate="G$1" pin="2"/>
+<wire x1="200.66" y1="127" x2="195.58" y2="127" width="0.1524" layer="91"/>
+<label x="195.58" y="127" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 <net name="68681_X1" class="0">

@@ -1,0 +1,217 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; NixieClock bootloader
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  org   $0
+
+  include "hardware.68k"
+  include "loader_api.68k"
+
+; vector table
+VectorTable:
+  dc.l  $80000, EntryPoint
+
+  dc.l  Exception_BusError, Exception_AddressError, Exception_Illegal, Exception_DivByZero
+  dc.l  Exception_Chk, Exception_TrapV, Exception_PrivilegeViolation, Exception_Trace
+  dc.l  Exception_LineA, Exception_LineF, Exception_Reserved, Exception_Reserved
+  dc.l  Exception_Reserved
+
+  ; uninitialized interrupt
+  dc.l  Exception_Other
+
+  ; reserved
+  rept 8
+  dc.l  Exception_Reserved
+  endr
+
+  ; interrupts
+  dc.l  IRQ_Spurious, IRQ_Lvl1, IRQ_Lvl2, IRQ_Lvl3
+  dc.l  IRQ_Lvl4, IRQ_Lvl5, IRQ_Lvl6, IRQ_Lvl7
+
+  ; traps
+  rept 16
+  dc.l  Exception_UnimplementedTrap
+  endr
+
+  ; reserved
+  rept 16
+  dc.l  Exception_Reserved
+  endr
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Exception handlers
+;
+; Any abnormal conditions (e.g. fatal exceptions) are handled by putting the
+; exception reason in d0 and calling Exception_Handle.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Exception_BusError:
+  move.b  #$01, d0
+  bra.w   Exception_Handle
+
+Exception_AddressError:
+  move.b  #$02, d0
+  bra.w   Exception_Handle
+
+Exception_Illegal:
+  move.b  #$03, d0
+  bra.w   Exception_Handle
+
+Exception_DivByZero:
+  move.b  #$04, d0
+  bra.w   Exception_Handle
+
+Exception_Chk:
+  move.b  #$05, d0
+  bra.w   Exception_Handle
+
+Exception_TrapV:
+  move.b  #$06, d0
+  bra.w   Exception_Handle
+
+Exception_PrivilegeViolation:
+  move.b  #$07, d0
+  bra.w   Exception_Handle
+
+Exception_Trace:
+  move.b  #$08, d0
+  bra.w   Exception_Handle
+
+Exception_LineA:
+  move.b  #$09, d0
+  bra.w   Exception_Handle
+
+Exception_LineF:
+  move.b  #$0A, d0
+  bra.w   Exception_Handle
+
+Exception_Other:
+  move.b  #$0B, d0
+  bra.w   Exception_Handle
+
+Exception_Reserved:
+  move.b  #$0C, d0
+  bra.w   Exception_Handle
+
+
+
+; this does nothing rn
+Exception_Handle:
+  ; disable all interrupts
+  move  $2700, sr
+
+  ; wait lol
+  nop
+  bra.s Exception_Handle
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; IRQ handlers
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+IRQ_Spurious:
+  move.b  #$0D, d0
+  bra.w   Exception_Handle
+
+IRQ_Lvl1:
+  move.l  a0, -(sp)
+  lea     (Loader_IRQ1), a0
+  jsr     (a0)
+  move.l  (sp)+, a0
+  rte
+
+IRQ_Lvl2:
+  move.l  a0, -(sp)
+  lea     (Loader_IRQ2), a0
+  jsr     (a0)
+  move.l  (sp)+, a0
+  rte
+
+IRQ_Lvl3:
+  move.l  a0, -(sp)
+  lea     (Loader_IRQ3), a0
+  jsr     (a0)
+  move.l  (sp)+, a0
+  rte
+
+IRQ_Lvl4:
+  move.l  a0, -(sp)
+  lea     (Loader_IRQ4), a0
+  jsr     (a0)
+  move.l  (sp)+, a0
+  rte
+
+IRQ_Lvl5:
+  move.l  a0, -(sp)
+  lea     (Loader_IRQ5), a0
+  jsr     (a0)
+  move.l  (sp)+, a0
+  rte
+
+IRQ_Lvl6:
+  move.l  a0, -(sp)
+  lea     (Loader_IRQ6), a0
+  jsr     (a0)
+  move.l  (sp)+, a0
+  rte
+
+IRQ_Lvl7:
+  move.l  a0, -(sp)
+  lea     (Loader_IRQ7), a0
+  jsr     (a0)
+  move.l  (sp)+, a0
+  rte
+
+
+
+IRQ_Unused:
+  rts
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Trap handlers
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Exception_UnimplementedTrap:
+  ; move.b  #$0E, d0
+  bra.w   Exception_Handle
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Loader entry point
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+EntryPoint:
+  ; disable all interrupts
+  move    #$2700, sr
+
+  ; clear all RAM
+  lea     (RAM_Base), a0
+
+  moveq   #0, d0
+  move.w  #(131072/4)-1, d1
+
+.clear:
+  move.l  d0, (a0)+
+  dbf     d1, .clear
+
+  ; initialize IRQ vectors
+  move.l  #IRQ_Unused, d0
+
+  move.l  d0, Loader_IRQ1
+  move.l  d0, Loader_IRQ2
+  move.l  d0, Loader_IRQ3
+  move.l  d0, Loader_IRQ4
+  move.l  d0, Loader_IRQ5
+  move.l  d0, Loader_IRQ6
+  move.l  d0, Loader_IRQ7
+
+  ; TODO: do stuff here, lmfao
+  nop
+  bra.s   EntryPoint
+
+  ; jump to the app
+  move    #$2700, sr
+
+  lea     ROM_App_Base, a0
+
+  ; TODO: validate version
+  move.w  (a0)+, d0
+
+  ; set up stack and jump to app
+  move.l  4(a0), sp
+  jmp     (a0)

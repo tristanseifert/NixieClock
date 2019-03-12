@@ -1,0 +1,7 @@
+# ignore binaries
+app.bin
+loader.bin
+
+# also, ignore listing files
+app.lst
+loader.lst

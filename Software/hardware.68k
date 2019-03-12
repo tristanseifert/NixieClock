@@ -1,0 +1,22 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; various equates for NixieClock hardware
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; ROM base (bootloader address)
+ROM_Base                    = $000000
+; Application ROM starting location
+ROM_App_Base                = $008000
+
+; 68681 base
+MC68681_Base                = $020000
+
+; RTC base
+RTC_Base                    = $030000
+
+; Nixie output register base
+Nixie_Base                  = $040000
+
+; VFD base
+VFD_Base                    = $050000
+
+; RAM base
+RAM_Base                    = $060000

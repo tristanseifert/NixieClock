@@ -1,0 +1,27 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; NixieClock app
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; app starts at $8000 in ROM
+	org	$8000
+
+; table describing app
+AppInfoTable:
+	; app info table version
+	dc.w	$0100
+	; Entry point and initial stack pointer
+	dc.l	EntryPoint, $80000
+	; App name (32 bytes)
+	dc.b	"NixieClock                      "
+	; App version
+	dc.w	$0100
+	; Description (64 bytes)
+	rept 64
+	dc.b	$00
+	endr
+
+
+
+; App entry point
+EntryPoint:
+	nop
+	bra.s	EntryPoint

@@ -1130,6 +1130,7 @@ MAX3223-MAX3243.pdf</description>
 <wire x1="-1.27" y1="0.635" x2="0" y2="0.635" width="0.127" layer="21"/>
 <wire x1="0" y1="0.635" x2="1.27" y2="0.635" width="0.127" layer="21"/>
 <wire x1="0" y1="0.635" x2="0" y2="1.651" width="0.127" layer="21"/>
+<text x="3.81" y="0" size="1.27" layer="25" rot="R90" align="top-center">&gt;NAME</text>
 </package>
 <package name="1792863">
 <pad name="1" x="0" y="-0.1" drill="1.2" diameter="2.2"/>
@@ -2847,7 +2848,7 @@ square</description>
 </device>
 </devices>
 </deviceset>
-<deviceset name="INS-1">
+<deviceset name="INS-1" prefix="NE">
 <gates>
 <gate name="G$1" symbol="NIXIE_INDICATOR" x="0" y="0"/>
 </gates>

@@ -4,6 +4,7 @@
   org   $0
 
   include "hardware.68k"
+  include "ram.68k"
   include "loader_api.68k"
 
 ; vector table

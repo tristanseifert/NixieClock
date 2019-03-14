@@ -4,6 +4,11 @@
 ; app starts at $8000 in ROM
 	org	$8000
 
+  include "hardware.68k"
+  include "ram.68k"
+  include "loader_api.68k"
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; table describing app
 AppInfoTable:
 	; app info table version
@@ -19,9 +24,15 @@ AppInfoTable:
 	dc.b	$00
 	endr
 
-
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; App entry point
 EntryPoint:
+	; reset hardware
+	bsr.w	Nixie_Reset
+
 	nop
 	bra.s	EntryPoint
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Hardware helper routines
+	include	"nixie.68k"

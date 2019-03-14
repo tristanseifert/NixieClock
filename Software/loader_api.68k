@@ -3,16 +3,16 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; Level 1 interrupt vector address
-Loader_IRQ1               = RAM_Base + $10
+Loader_IRQ1               = RAM_Loader + $10
 ; Level 2 interrupt vector address
-Loader_IRQ2               = RAM_Base + $14
+Loader_IRQ2               = RAM_Loader + $14
 ; Level 3 interrupt vector address
-Loader_IRQ3               = RAM_Base + $18
+Loader_IRQ3               = RAM_Loader + $18
 ; Level 4 interrupt vector address
-Loader_IRQ4               = RAM_Base + $1C
+Loader_IRQ4               = RAM_Loader + $1C
 ; Level 5 interrupt vector address
-Loader_IRQ5               = RAM_Base + $20
+Loader_IRQ5               = RAM_Loader + $20
 ; Level 6 interrupt vector address
-Loader_IRQ6               = RAM_Base + $24
+Loader_IRQ6               = RAM_Loader + $24
 ; Level 7 interrupt vector address
-Loader_IRQ7               = RAM_Base + $28
+Loader_IRQ7               = RAM_Loader + $28

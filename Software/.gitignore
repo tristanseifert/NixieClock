@@ -1,6 +1,7 @@
 # ignore binaries
 app.bin
 loader.bin
+rom.bin
 
 # also, ignore listing files
 app.lst

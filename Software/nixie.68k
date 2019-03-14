@@ -1,0 +1,70 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Routines to interface with the Nixie tubes.
+;
+; Tube drivers are mapped into the address space at $40000, with each tube
+; driver (driving two digits and a colon) being allocated 4 bytes in address
+; space.
+;
+; Hours are at offset 0, minutes at offset 1, and seconds at offset 2.
+;
+; State is buffered internally, two word for each driver:
+; LLLL RRRR | CC00 0000 | BBBB 0000 | 0000 0000
+; Where LLLL and RRRR are BCD digits for the numerical tubes, CC is the state of
+; the top and bottom colon. BBBB specifies whether the left or right digits, or
+; the top or bottom colon should be blinking.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Initializes all connected tube drivers. The display will be set to blank
+; and colons will be off.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Nixie_Reset:
+  ; clear the memory we use
+  moveq   #0, d0
+  moveq   #7, d1
+  lea     (RAM_Nixie_State), a0
+
+.clear:
+  move.l  d0, (a0)+
+  dbf     d1, .clear
+
+  ; update the tubes
+  bsr.s   Nixie_Update
+
+  rts
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Updates connected tube drivers with the in-memory display state.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Nixie_Update:
+  ; there are a total of 8 possible tube drivers
+  moveq   #7, d0
+
+  lea     (RAM_Nixie_State), a0
+  lea     (Nixie_Base), a1
+
+.update:
+  ; copy data
+  move.b  (a0)+, Nixie_Digits(a1)
+  move.b  (a0)+, Nixie_Misc(a1)
+
+  ; set up for the next driver
+  addq    #Nixie_Block_Sz, a1
+  dbf     d0, .update
+
+  ; done!
+  rts
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Periodic update handler, used to flash digits/colons.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Nixie_Timer:
+  ; decrement timer
+  subq.w  #1, (RAM_Nixie_Timer)
+  bne.s   .done
+
+  ; TODO: implement this
+  nop
+
+.done:
+  rts

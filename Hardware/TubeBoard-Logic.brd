@@ -2772,11 +2772,11 @@ Mors</description>
 </pass>
 </autorouter>
 <elements>
-<element name="C3" library="rcl" library_urn="urn:adsk.eagle:library:334" package="C1206" package3d_urn="urn:adsk.eagle:package:23618/2" value="100nF" x="49.53" y="60.96" smashed="yes" rot="MR90">
+<element name="C1" library="rcl" library_urn="urn:adsk.eagle:library:334" package="C1206" package3d_urn="urn:adsk.eagle:package:23618/2" value="100nF" x="49.53" y="60.96" smashed="yes" rot="MR90">
 <attribute name="NAME" x="50.8" y="59.69" size="1.27" layer="26" rot="MR90"/>
 <attribute name="SPICEPREFIX" value="C" x="49.53" y="60.96" size="1.778" layer="28" rot="MR90" display="off"/>
 </element>
-<element name="C4" library="rcl" library_urn="urn:adsk.eagle:library:334" package="C1206" package3d_urn="urn:adsk.eagle:package:23618/2" value="100nF" x="28.575" y="45.085" smashed="yes" rot="R270">
+<element name="C2" library="rcl" library_urn="urn:adsk.eagle:library:334" package="C1206" package3d_urn="urn:adsk.eagle:package:23618/2" value="100nF" x="28.575" y="45.085" smashed="yes" rot="R270">
 <attribute name="NAME" x="27.6098" y="45.5168" size="1.27" layer="25" rot="R90"/>
 <attribute name="SPICEPREFIX" value="C" x="28.575" y="45.085" size="1.778" layer="27" rot="R270" display="off"/>
 </element>
@@ -2807,17 +2807,17 @@ Mors</description>
 <attribute name="NAME" x="54.3052" y="58.2168" size="1.27" layer="26" ratio="10" rot="MR0"/>
 <attribute name="VALUE" x="53.1622" y="56.5658" size="1.27" layer="28" ratio="10" rot="MR270"/>
 </element>
-<element name="IC4" library="74xx-eu" library_urn="urn:adsk.eagle:library:85" package="SO14" package3d_urn="urn:adsk.eagle:package:1010/2" value="74HC04D" x="34.925" y="34.29" smashed="yes" rot="R180">
+<element name="IC5" library="74xx-eu" library_urn="urn:adsk.eagle:library:85" package="SO14" package3d_urn="urn:adsk.eagle:package:1010/2" value="74HC04D" x="34.925" y="34.29" smashed="yes" rot="R180">
 <attribute name="MOUSER" value="771-HC04D652" x="34.925" y="34.29" size="1.778" layer="27" rot="R180" align="top-center" display="off"/>
 <attribute name="NAME" x="39.751" y="36.195" size="1.27" layer="25" ratio="10" rot="R270"/>
 <attribute name="VALUE" x="38.1" y="35.052" size="1.27" layer="27" ratio="10" rot="R180"/>
 </element>
-<element name="IC5" library="74xx-eu" library_urn="urn:adsk.eagle:library:85" package="SO14" package3d_urn="urn:adsk.eagle:package:1010/2" value="74HC08D" x="34.925" y="43.18" smashed="yes">
+<element name="IC4" library="74xx-eu" library_urn="urn:adsk.eagle:library:85" package="SO14" package3d_urn="urn:adsk.eagle:package:1010/2" value="74HC08D" x="34.925" y="43.18" smashed="yes">
 <attribute name="MOUSER" value="771-HC08PW118" x="34.925" y="43.18" size="1.778" layer="27" align="top-center" display="off"/>
 <attribute name="NAME" x="39.751" y="45.085" size="1.27" layer="25" ratio="10" rot="R270"/>
 <attribute name="VALUE" x="31.75" y="42.418" size="1.27" layer="27" ratio="10"/>
 </element>
-<element name="C1" library="rcl" library_urn="urn:adsk.eagle:library:334" package="C1206" package3d_urn="urn:adsk.eagle:package:23618/2" value="100nF" x="34.925" y="12.065" smashed="yes">
+<element name="C3" library="rcl" library_urn="urn:adsk.eagle:library:334" package="C1206" package3d_urn="urn:adsk.eagle:package:23618/2" value="100nF" x="34.925" y="12.065" smashed="yes">
 <attribute name="NAME" x="37.4396" y="10.795" size="1.27" layer="25" rot="R180"/>
 <attribute name="SPICEPREFIX" value="C" x="34.925" y="12.065" size="1.778" layer="27" display="off"/>
 </element>
@@ -2830,22 +2830,22 @@ Mors</description>
 <attribute name="OC_NEWARK" value="unknown" x="53.1368" y="40.5384" size="1.778" layer="28" rot="MR270" display="off"/>
 <attribute name="VALUE" x="56.2864" y="35.7632" size="1.27" layer="28" ratio="10" rot="MR0"/>
 </element>
-<element name="R5" library="rcl" library_urn="urn:adsk.eagle:library:334" package="R2012" package3d_urn="urn:adsk.eagle:package:23543/2" value="10k" x="45.085" y="37.9476" smashed="yes" rot="MR0">
+<element name="R1" library="rcl" library_urn="urn:adsk.eagle:library:334" package="R2012" package3d_urn="urn:adsk.eagle:package:23543/2" value="10k" x="45.085" y="37.9476" smashed="yes" rot="MR0">
 <attribute name="MOUSER" value="652-CR0805FX-1002ELF" x="45.085" y="37.9476" size="1.778" layer="28" rot="MR0" display="off"/>
 <attribute name="NAME" x="42.545" y="37.3126" size="1.27" layer="26" rot="MR0"/>
 <attribute name="SPICEPREFIX" value="R" x="45.085" y="37.9476" size="1.778" layer="28" rot="MR0" display="off"/>
 </element>
-<element name="R6" library="rcl" library_urn="urn:adsk.eagle:library:334" package="R2012" package3d_urn="urn:adsk.eagle:package:23543/2" value="10k" x="45.085" y="40.4622" smashed="yes" rot="MR0">
+<element name="R2" library="rcl" library_urn="urn:adsk.eagle:library:334" package="R2012" package3d_urn="urn:adsk.eagle:package:23543/2" value="10k" x="45.085" y="40.4622" smashed="yes" rot="MR0">
 <attribute name="MOUSER" value="652-CR0805FX-1002ELF" x="45.085" y="40.4622" size="1.778" layer="28" rot="MR0" display="off"/>
 <attribute name="NAME" x="42.545" y="39.8272" size="1.27" layer="26" rot="MR0"/>
 <attribute name="SPICEPREFIX" value="R" x="45.085" y="40.4622" size="1.778" layer="28" rot="MR0" display="off"/>
 </element>
-<element name="R7" library="rcl" library_urn="urn:adsk.eagle:library:334" package="R2012" package3d_urn="urn:adsk.eagle:package:23543/2" value="10k" x="45.085" y="43.0022" smashed="yes" rot="MR0">
+<element name="R3" library="rcl" library_urn="urn:adsk.eagle:library:334" package="R2012" package3d_urn="urn:adsk.eagle:package:23543/2" value="10k" x="45.085" y="43.0022" smashed="yes" rot="MR0">
 <attribute name="MOUSER" value="652-CR0805FX-1002ELF" x="45.085" y="43.0022" size="1.778" layer="28" rot="MR0" display="off"/>
 <attribute name="NAME" x="42.545" y="42.3672" size="1.27" layer="26" rot="MR0"/>
 <attribute name="SPICEPREFIX" value="R" x="45.085" y="43.0022" size="1.778" layer="28" rot="MR0" display="off"/>
 </element>
-<element name="C2" library="rcl" library_urn="urn:adsk.eagle:library:334" package="C1206" package3d_urn="urn:adsk.eagle:package:23618/2" value="100nF" x="15.24" y="14.605" smashed="yes" rot="R180">
+<element name="C4" library="rcl" library_urn="urn:adsk.eagle:library:334" package="C1206" package3d_urn="urn:adsk.eagle:package:23618/2" value="100nF" x="15.24" y="14.605" smashed="yes" rot="R180">
 <attribute name="NAME" x="16.51" y="13.335" size="1.27" layer="25" rot="R180"/>
 <attribute name="SPICEPREFIX" value="C" x="15.24" y="14.605" size="1.778" layer="27" rot="R180" display="off"/>
 </element>
@@ -2853,7 +2853,7 @@ Mors</description>
 <attribute name="NAME" x="41.275" y="33.02" size="1.27" layer="25"/>
 <attribute name="SPICEPREFIX" value="C" x="42.545" y="31.75" size="1.778" layer="27" display="off"/>
 </element>
-<element name="C8" library="rcl" library_urn="urn:adsk.eagle:library:334" package="SMC_B" package3d_urn="urn:adsk.eagle:package:25920/5" value="10µF" x="15.2908" y="60.8076" smashed="yes" rot="R180">
+<element name="C6" library="rcl" library_urn="urn:adsk.eagle:library:334" package="SMC_B" package3d_urn="urn:adsk.eagle:package:25920/5" value="10µF" x="15.2908" y="60.8076" smashed="yes" rot="R180">
 <attribute name="MOUSER" value="581-TAJB106K020RNJV" x="21.3868" y="54.2544" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="NAME" x="17.1958" y="58.9026" size="1.016" layer="25" rot="R180"/>
 <attribute name="SPICEPREFIX" value="C" x="21.3868" y="54.2544" size="1.778" layer="27" rot="R180" display="off"/>
@@ -2878,22 +2878,22 @@ Mors</description>
 </elements>
 <signals>
 <signal name="+5V">
-<contactref element="C3" pad="1"/>
-<contactref element="C4" pad="1"/>
+<contactref element="C1" pad="1"/>
+<contactref element="C2" pad="1"/>
 <contactref element="SV2" pad="19"/>
 <contactref element="IC1" pad="20"/>
 <contactref element="IC2" pad="20"/>
 <contactref element="IC3" pad="3"/>
 <contactref element="IC3" pad="16"/>
-<contactref element="IC4" pad="14"/>
 <contactref element="IC5" pad="14"/>
-<contactref element="C1" pad="1"/>
+<contactref element="IC4" pad="14"/>
+<contactref element="C3" pad="1"/>
 <contactref element="S1" pad="3"/>
 <contactref element="S1" pad="1"/>
 <contactref element="S1" pad="2"/>
 <contactref element="C5" pad="1"/>
-<contactref element="C2" pad="1"/>
-<contactref element="C8" pad="+"/>
+<contactref element="C4" pad="1"/>
+<contactref element="C6" pad="+"/>
 <contactref element="SV1" pad="18"/>
 <contactref element="SV1" pad="17"/>
 <contactref element="SV3" pad="19"/>
@@ -2960,8 +2960,8 @@ Mors</description>
 <via x="35.8775" y="14.605" extent="1-16" drill="0.3048"/>
 </signal>
 <signal name="GND">
-<contactref element="C3" pad="2"/>
-<contactref element="C4" pad="2"/>
+<contactref element="C1" pad="2"/>
+<contactref element="C2" pad="2"/>
 <contactref element="SV2" pad="20"/>
 <contactref element="SV2" pad="2"/>
 <contactref element="SV2" pad="1"/>
@@ -2974,15 +2974,15 @@ Mors</description>
 <contactref element="IC3" pad="1"/>
 <contactref element="IC3" pad="2"/>
 <contactref element="IC3" pad="4"/>
-<contactref element="IC4" pad="7"/>
 <contactref element="IC5" pad="7"/>
-<contactref element="C1" pad="2"/>
-<contactref element="R7" pad="2"/>
-<contactref element="R5" pad="2"/>
-<contactref element="R6" pad="2"/>
+<contactref element="IC4" pad="7"/>
+<contactref element="C3" pad="2"/>
+<contactref element="R3" pad="2"/>
+<contactref element="R1" pad="2"/>
+<contactref element="R2" pad="2"/>
 <contactref element="C5" pad="2"/>
-<contactref element="C2" pad="2"/>
-<contactref element="C8" pad="-"/>
+<contactref element="C4" pad="2"/>
+<contactref element="C6" pad="-"/>
 <contactref element="SV1" pad="4"/>
 <contactref element="SV1" pad="2"/>
 <contactref element="SV1" pad="1"/>
@@ -3290,8 +3290,8 @@ Mors</description>
 </signal>
 <signal name="A0">
 <contactref element="SV2" pad="3"/>
-<contactref element="IC5" pad="2"/>
-<contactref element="IC4" pad="3"/>
+<contactref element="IC4" pad="2"/>
+<contactref element="IC5" pad="3"/>
 <contactref element="SV3" pad="3"/>
 <wire x1="40.64" y1="61.214" x2="40.64" y2="60.28005625" width="0.2032" layer="1"/>
 <wire x1="40.64" y1="54.23995625" x2="40.64" y2="53.1368" width="0.2032" layer="1"/>
@@ -3367,7 +3367,7 @@ Mors</description>
 </signal>
 <signal name="!NIXIE_CS">
 <contactref element="SV2" pad="17"/>
-<contactref element="IC4" pad="1"/>
+<contactref element="IC5" pad="1"/>
 <contactref element="SV3" pad="17"/>
 <wire x1="22.86" y1="61.214" x2="22.86" y2="60.28005625" width="0.2032" layer="1"/>
 <wire x1="22.86" y1="54.23995625" x2="22.86" y2="53.1368" width="0.2032" layer="1"/>
@@ -3388,7 +3388,7 @@ Mors</description>
 </signal>
 <signal name="DIGIT_LATCH">
 <contactref element="IC1" pad="11"/>
-<contactref element="IC5" pad="6"/>
+<contactref element="IC4" pad="6"/>
 <wire x1="21.2725" y1="26.035" x2="19.7358" y2="26.035" width="0.2032" layer="1"/>
 <wire x1="25.7175" y1="26.035" x2="21.2725" y2="26.035" width="0.2032" layer="16"/>
 <wire x1="34.44875" y1="34.76625" x2="25.7175" y2="26.035" width="0.2032" layer="16"/>
@@ -3403,7 +3403,7 @@ Mors</description>
 </signal>
 <signal name="CONTROL_LATCH">
 <contactref element="IC2" pad="11"/>
-<contactref element="IC5" pad="3"/>
+<contactref element="IC4" pad="3"/>
 <wire x1="33.655" y1="26.82875" x2="33.655" y2="26.035" width="0.2032" layer="1"/>
 <wire x1="30.1625" y1="30.32125" x2="33.655" y2="26.82875" width="0.2032" layer="1"/>
 <wire x1="30.1625" y1="33.3375" x2="30.1625" y2="30.32125" width="0.2032" layer="1"/>
@@ -3415,7 +3415,7 @@ Mors</description>
 </signal>
 <signal name="SELECT_EN">
 <contactref element="IC3" pad="6"/>
-<contactref element="IC5" pad="10"/>
+<contactref element="IC4" pad="10"/>
 <wire x1="36.195" y1="44.7675" x2="36.195" y2="46.2534" width="0.2032" layer="1"/>
 <wire x1="36.195" y1="44.1325" x2="36.195" y2="44.7675" width="0.2032" layer="16"/>
 <wire x1="43.4975" y1="36.83" x2="36.195" y2="44.1325" width="0.2032" layer="16"/>
@@ -3430,7 +3430,7 @@ Mors</description>
 <signal name="ID0">
 <contactref element="IC3" pad="9"/>
 <contactref element="S1" pad="6"/>
-<contactref element="R7" pad="1"/>
+<contactref element="R3" pad="1"/>
 <wire x1="49.3268" y1="48.3108" x2="49.3268" y2="43.18" width="0.2032" layer="16"/>
 <wire x1="49.3268" y1="43.18" x2="49.3268" y2="43.0784" width="0.2032" layer="16"/>
 <wire x1="45.935" y1="43.0022" x2="49.149" y2="43.0022" width="0.2032" layer="16"/>
@@ -3439,7 +3439,7 @@ Mors</description>
 <signal name="ID1">
 <contactref element="IC3" pad="11"/>
 <contactref element="S1" pad="5"/>
-<contactref element="R6" pad="1"/>
+<contactref element="R2" pad="1"/>
 <wire x1="49.3268" y1="50.8508" x2="50.1142" y2="50.8508" width="0.2032" layer="16"/>
 <wire x1="51.435" y1="49.53" x2="51.435" y2="41.275" width="0.2032" layer="16"/>
 <wire x1="50.6984" y1="40.5384" x2="49.53" y2="40.5384" width="0.2032" layer="16"/>
@@ -3452,7 +3452,7 @@ Mors</description>
 <signal name="ID2">
 <contactref element="IC3" pad="14"/>
 <contactref element="S1" pad="4"/>
-<contactref element="R5" pad="1"/>
+<contactref element="R1" pad="1"/>
 <wire x1="50.8" y1="50.6679" x2="50.8" y2="53.975" width="0.2032" layer="16"/>
 <wire x1="51.7906" y1="49.6773" x2="50.8" y2="50.6679" width="0.2032" layer="16"/>
 <wire x1="50.8" y1="40.0580375" x2="50.8" y2="39.37" width="0.2032" layer="16"/>
@@ -3466,8 +3466,8 @@ Mors</description>
 <wire x1="50.1142" y1="54.6608" x2="50.8" y2="53.975" width="0.2032" layer="16"/>
 </signal>
 <signal name="NIXIE_CS">
-<contactref element="IC4" pad="2"/>
-<contactref element="IC5" pad="9"/>
+<contactref element="IC5" pad="2"/>
+<contactref element="IC4" pad="9"/>
 <wire x1="37.465" y1="38.25875" x2="37.465" y2="37.3634" width="0.2032" layer="1"/>
 <wire x1="36.83" y1="38.89375" x2="37.465" y2="38.25875" width="0.2032" layer="1"/>
 <wire x1="36.83" y1="42.545" x2="36.83" y2="38.89375" width="0.2032" layer="1"/>
@@ -3479,16 +3479,16 @@ Mors</description>
 <wire x1="37.465" y1="46.2534" x2="37.465" y2="47.3075" width="0.2032" layer="1"/>
 </signal>
 <signal name="!A0">
-<contactref element="IC4" pad="4"/>
-<contactref element="IC5" pad="5"/>
+<contactref element="IC5" pad="4"/>
+<contactref element="IC4" pad="5"/>
 <wire x1="34.925" y1="38.1" x2="34.925" y2="37.3634" width="0.2032" layer="1"/>
 <wire x1="36.195" y1="39.37" x2="34.925" y2="38.1" width="0.2032" layer="1"/>
 <wire x1="36.195" y1="40.1066" x2="36.195" y2="39.37" width="0.2032" layer="1"/>
 </signal>
 <signal name="BOARD_SELECT">
-<contactref element="IC5" pad="8"/>
-<contactref element="IC5" pad="1"/>
-<contactref element="IC5" pad="4"/>
+<contactref element="IC4" pad="8"/>
+<contactref element="IC4" pad="1"/>
+<contactref element="IC4" pad="4"/>
 <wire x1="31.115" y1="41.11625" x2="31.115" y2="40.1066" width="0.2032" layer="1"/>
 <wire x1="32.22625" y1="42.2275" x2="31.115" y2="41.11625" width="0.2032" layer="1"/>
 <wire x1="33.81375" y1="42.2275" x2="32.22625" y2="42.2275" width="0.2032" layer="1"/>

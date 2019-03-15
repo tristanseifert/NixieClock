@@ -23073,8 +23073,8 @@ http://www.st.com&lt;p&gt;
 </part>
 <part name="P+17" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="GND16" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
-<part name="IC9" library="74xx-eu" library_urn="urn:adsk.eagle:library:85" deviceset="74*266" device="N" package3d_urn="urn:adsk.eagle:package:16407/2" technology="HC">
-<attribute name="MOUSER" value="595-SN74HC266N"/>
+<part name="IC9" library="74xx-eu" library_urn="urn:adsk.eagle:library:85" deviceset="74*266" device="N" package3d_urn="urn:adsk.eagle:package:16407/2" technology="HC" value="74HC7266">
+<attribute name="MOUSER" value="595-CD74HC7266E"/>
 </part>
 <part name="IC12" library="74xx-eu" library_urn="urn:adsk.eagle:library:85" deviceset="74*08" device="N" package3d_urn="urn:adsk.eagle:package:16407/2" technology="HC">
 <attribute name="MOUSER" value="595-SN74HC08AN"/>
@@ -24607,7 +24607,7 @@ SV6: Side buttons</text>
 </instance>
 </instances>
 <busses>
-<bus name="!68681_CS,!68681_DTACK,!68681_IACK,68681_X[1..2],A[0..19],D[0..7],!IPL1,!OE,!RTC_CS,R/!W!,STATUS[0..3],UART0_RX,UART1_TX,!VFD_RESET">
+<bus name="!68681_CS,!68681_DTACK,!68681_IACK,A[0..19],CLK,D[0..7],!IPL1,!OE,OUT[0..1],!RESET,!RTC_CS,R/!W!,STATUS[0..1],STATUS[0..3],UART0_RX,UART0_TX,UART1_RX,UART1_TX,!VFD_RESET">
 <segment>
 <wire x1="25.4" y1="177.8" x2="68.58" y2="177.8" width="0.762" layer="92"/>
 <wire x1="68.58" y1="177.8" x2="71.12" y2="177.8" width="0.762" layer="92"/>
@@ -25204,12 +25204,22 @@ SV6: Side buttons</text>
 <wire x1="200.66" y1="101.6" x2="195.58" y2="101.6" width="0.1524" layer="91"/>
 <label x="195.58" y="101.6" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
+<segment>
+<pinref part="IC5" gate="G$1" pin="OP3"/>
+<wire x1="60.96" y1="144.78" x2="66.04" y2="144.78" width="0.1524" layer="91"/>
+<wire x1="66.04" y1="144.78" x2="68.58" y2="142.24" width="0.1524" layer="91"/>
+</segment>
 </net>
 <net name="OUT1" class="0">
 <segment>
 <pinref part="SV6" gate="G$1" pin="7"/>
 <wire x1="215.9" y1="101.6" x2="220.98" y2="101.6" width="0.1524" layer="91"/>
 <label x="220.98" y="101.6" size="1.778" layer="95" xref="yes"/>
+</segment>
+<segment>
+<pinref part="IC5" gate="G$1" pin="OP1"/>
+<wire x1="60.96" y1="149.86" x2="66.04" y2="149.86" width="0.1524" layer="91"/>
+<wire x1="66.04" y1="149.86" x2="68.58" y2="147.32" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="!IPL1" class="0">
@@ -25361,6 +25371,7 @@ $60000 - $7FFFF: RAM</text>
 <wire x1="0" y1="53.34" x2="154.94" y2="53.34" width="0.1524" layer="94" style="longdash"/>
 <text x="2.54" y="55.88" size="1.778" layer="97">!RESET! generator</text>
 <text x="152.4" y="50.8" size="1.778" layer="97" rot="R180">Unused gates</text>
+<text x="157.48" y="99.06" size="1.778" layer="97">R2/R3 may not be needed, populate if RAM/ROM !CS! is bad</text>
 </plain>
 <instances>
 <instance part="FRAME3" gate="G$1" x="0" y="0" smashed="yes"/>

@@ -12,7 +12,10 @@ RAM_Loader                = RAM_Base
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 RAM_Nixie                 = (RAM_Base + $1000)
 
-; Blink timer
+; Blink timer (1 byte)
 RAM_Nixie_Timer           = (RAM_Nixie)
 ; Location of driver state: each state is 32 bits.
-RAM_Nixie_State           = (RAM_Nixie + $4)
+RAM_Nixie_State           = (RAM_Nixie + $10)
+; Nixie input state: each entry is 16 bits: one byte of BCD digits for the digit
+; tubes, followed by a byte with bit 1 being the top colon, and 0 the bottom.
+RAM_Nixie_OutState        = (RAM_Nixie + $30)

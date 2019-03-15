@@ -12,27 +12,32 @@
 ; table describing app
 AppInfoTable:
 	; app info table version
-	dc.w	$0100
+	dc.w		$0100
 	; Entry point and initial stack pointer
-	dc.l	EntryPoint, $80000
+	dc.l		EntryPoint, $80000
 	; App name (32 bytes)
-	dc.b	"NixieClock                      "
+	dc.b		"NixieClock                      "
 	; App version
-	dc.w	$0100
+	dc.w		$0100
 	; Description (64 bytes)
 	rept 64
-	dc.b	$00
+	dc.b		$00
 	endr
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; App entry point
 EntryPoint:
 	; reset hardware
-	bsr.w	Nixie_Reset
+	bsr.w		Nixie_Reset
+  bsr.w   MC68681_Reset
+
+	; enable interrupts now
+	move		#$2200, sr
 
 	nop
-	bra.s	EntryPoint
+	bra.s		EntryPoint
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Hardware helper routines
+	include	"68681.68k"
 	include	"nixie.68k"

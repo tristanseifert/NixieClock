@@ -1,0 +1,68 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Routines for interfacing with the MC68681 DUART.
+;
+; UART 0 is used by the bootloader and for logging from the application; UART 1
+; can be used by the application for whatever purpose it desires.
+;
+; On reset, both UARTs are configured to operate at 115200 baud, and a periodic
+; timer is set to fire every 10ms.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; READ registers
+MC68681_RegR_ISR            = $5
+
+; WRITE registers
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Resets and initializes the 68681 peripheral.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+MC68681_Reset:
+  moveq   #0, d0
+  moveq   #0, d1
+
+  ; install interrupt handler (level 2)
+  move.l  #MC68681_ISR, (Loader_IRQ2)
+
+  ; copy registers
+  lea     (MC68681_Reset_Data), a0
+  lea     (MC68681_Base), a1
+
+.next:
+  ; load register number
+  move.b  (a0)+, d0
+
+  ; if register number is $FF, abort
+  cmp.b   #$FF, d0
+  beq.s   .done
+
+  ; write register data
+  move.b  (a0)+, d1
+  move.b   d1, (a1, d0.w)
+
+  ; do the next register
+  bra.s   .next
+
+.done:
+  rts
+
+; a set of 2-byte tuples in the format of register, value; terminated with a
+; register number of $FF.
+MC68681_Reset_Data:
+  dc.b    $FF, 0
+  even
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; 68681 ISR
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+MC68681_ISR:
+  ; save regs
+  move.l  d0, -(sp)
+
+  ; read ISR
+  move.b  (MC68681_Base+MC68681_RegR_ISR), d0
+
+.restore:
+
+.done:
+  move.l  (sp)+, d0
+  rte

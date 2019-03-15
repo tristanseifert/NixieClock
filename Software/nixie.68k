@@ -20,13 +20,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 Nixie_Reset:
   ; clear the memory we use
+  moveq   #7, d7
   moveq   #0, d0
-  moveq   #7, d1
   lea     (RAM_Nixie_State), a0
 
 .clear:
   move.l  d0, (a0)+
-  dbf     d1, .clear
+  dbf     d7, .clear
 
   ; update the tubes
   bsr.s   Nixie_Update
@@ -38,9 +38,9 @@ Nixie_Reset:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 Nixie_Update:
   ; there are a total of 8 possible tube drivers
-  moveq   #7, d0
+  moveq   #7, d7
 
-  lea     (RAM_Nixie_State), a0
+  lea     (RAM_Nixie_OutState), a0
   lea     (Nixie_Base), a1
 
 .update:
@@ -50,21 +50,133 @@ Nixie_Update:
 
   ; set up for the next driver
   addq    #Nixie_Block_Sz, a1
-  dbf     d0, .update
+  dbf     d7, .update
 
   ; done!
   rts
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Periodic update handler, used to flash digits/colons.
+;
+; Clobbers: d0, d1, d7
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 Nixie_Timer:
   ; decrement timer
-  subq.w  #1, (RAM_Nixie_Timer)
-  bne.s   .done
+  subq.b  #1, (RAM_Nixie_Timer)
+  bne.w   .done
 
-  ; TODO: implement this
-  nop
+  ; iterate over each output
+  moveq   #7, d7
+
+  lea     (RAM_Nixie_OutState), a0
+  lea     (RAM_Nixie_State), a1
+
+.loop:
+  ; set up some state
+  moveq   #0, d0
+  moveq   #0, d1
+
+  ; are any of the blink bits set?
+  move.b  2(a1), d0
+  tst.b   d0
+  bne.s   .noBlink
+
+  ; clear the output state for this driver
+  move.w  d1, 0(a0)
+
+  ; if there are, toggle them
+  eor.b   d0, 3(a1)
+  move.b  3(a1), d0
+
+
+  ;;;;; the section below is repeated for each digit
+  ; should we blank the left digit?
+  btst    #7, d0
+  bne.s   .noBlankLeft
+
+  ; yes, so set it to F (tube drivers interpret out-of-range as blanking)
+  and.b   #$0F, 0(a0)
+  or.b    #$F0, 0(a0)
+
+  bra.s   .checkRight
+
+.noBlankLeft:
+  ; no, so just copy the value from the output
+  move.b  0(a1), d1
+  and.b   #$F0, d1
+  or.b    d1, 0(a0)
+
+  ;;;;; end repeated section per digit
+.checkRight:
+  ; should we blank the right digit?
+  btst    #6, d0
+  bne.s   .noBlankRight
+
+  ; yes, so set it to F (tube drivers interpret out-of-range as blanking)
+  and.b   #$F0, 0(a0)
+  or.b    #$0F, 0(a0)
+
+  bra.s   .checkTop
+
+.noBlankRight:
+  ; no, so just copy the value from the output
+  move.b  0(a1), d1
+  and.b   #$0F, d1
+  or.b    d1, 0(a0)
+
+
+  ;;;;; the section below is repeated for each colon
+  ; check whether the top colon needs to be blinked
+.checkTop:
+  ; should we blank the top colon?
+  btst    #5, d0
+  bne.s   .noBlankTop
+
+  ; yes, so set the colon to be off
+  and.b   #$7F, 0(a0)
+
+  bra.s   .checkBottom
+
+.noBlankTop:
+  ; no, so just copy the current state
+  move.b  1(a1), d1
+  and.b   #$80, d1
+  or.b    d1, 1(a0)
+
+.checkBottom:
+  ; should we blank the bottom colon?
+  btst    #4, d0
+  bne.s   .noBlankBottom
+
+  ; yes, so set the colon to be off
+  and.b   #$BF, 0(a0)
+
+  bra.s   .next
+
+.noBlankBottom:
+  ; no, so just copy the current state
+  move.b  1(a1), d1
+  and.b   #$40, d1
+  or.b    d1, 1(a0)
+
+  ; finished!
+  bra.s   .next
+
+.noBlink:
+  ; just copy state
+  move.w  0(a1), d0
+  and.w   #$FFC0, d0
+  move.w  d0, 0(a0)
+
+.next:
+  ; check the state for the next set of digits
+  addq    #2, a0
+  addq    #4, a1
+  dbf     d7, .loop
 
 .done:
+  ; update the tubes' state, thanks and gig em
+  bra.w   Nixie_Update
+
+  ; XXX: NOT REACHED
   rts

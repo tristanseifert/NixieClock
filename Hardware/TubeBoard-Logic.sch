@@ -19099,6 +19099,9 @@ LETTER landscape</description>
 <part name="P+8" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="GND17" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="WEED1" library="Parts" deviceset="WEED" device=""/>
+<part name="FRAME2" library="frames" library_urn="urn:adsk.eagle:library:229" deviceset="LETTER_L" device=""/>
+<part name="GND18" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
+<part name="GND19" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -20081,6 +20084,70 @@ LETTER landscape</description>
 <pinref part="SV1" gate="G$1" pin="3"/>
 <wire x1="172.72" y1="48.26" x2="177.8" y2="48.26" width="0.1524" layer="91"/>
 <wire x1="177.8" y1="48.26" x2="180.34" y2="45.72" width="0.1524" layer="91"/>
+</segment>
+</net>
+</nets>
+</sheet>
+<sheet>
+<plain>
+</plain>
+<instances>
+<instance part="FRAME2" gate="G$1" x="0" y="0" smashed="yes"/>
+<instance part="FRAME2" gate="G$2" x="147.32" y="0" smashed="yes">
+<attribute name="LAST_DATE_TIME" x="160.02" y="1.27" size="2.54" layer="94"/>
+<attribute name="SHEET" x="233.68" y="1.27" size="2.54" layer="94"/>
+<attribute name="DRAWING_NAME" x="165.1" y="19.05" size="2.54" layer="94"/>
+</instance>
+<instance part="IC5" gate="C" x="20.32" y="175.26" smashed="yes">
+<attribute name="NAME" x="22.86" y="178.435" size="1.778" layer="95"/>
+<attribute name="VALUE" x="22.86" y="170.18" size="1.778" layer="96"/>
+</instance>
+<instance part="IC5" gate="D" x="20.32" y="160.02" smashed="yes">
+<attribute name="NAME" x="22.86" y="163.195" size="1.778" layer="95"/>
+<attribute name="VALUE" x="22.86" y="154.94" size="1.778" layer="96"/>
+</instance>
+<instance part="IC5" gate="E" x="20.32" y="144.78" smashed="yes">
+<attribute name="NAME" x="22.86" y="147.955" size="1.778" layer="95"/>
+<attribute name="VALUE" x="22.86" y="139.7" size="1.778" layer="96"/>
+</instance>
+<instance part="IC5" gate="F" x="20.32" y="129.54" smashed="yes">
+<attribute name="NAME" x="22.86" y="132.715" size="1.778" layer="95"/>
+<attribute name="VALUE" x="22.86" y="124.46" size="1.778" layer="96"/>
+</instance>
+<instance part="GND18" gate="1" x="10.16" y="127" smashed="yes">
+<attribute name="VALUE" x="7.62" y="124.46" size="1.778" layer="96"/>
+</instance>
+<instance part="IC4" gate="D" x="58.42" y="172.72" smashed="yes">
+<attribute name="NAME" x="60.96" y="175.895" size="1.778" layer="95"/>
+<attribute name="VALUE" x="60.96" y="167.64" size="1.778" layer="96"/>
+</instance>
+<instance part="GND19" gate="1" x="50.8" y="167.64" smashed="yes">
+<attribute name="VALUE" x="48.26" y="165.1" size="1.778" layer="96"/>
+</instance>
+</instances>
+<busses>
+</busses>
+<nets>
+<net name="GND" class="0">
+<segment>
+<pinref part="IC5" gate="C" pin="I"/>
+<pinref part="IC5" gate="F" pin="I"/>
+<wire x1="10.16" y1="175.26" x2="10.16" y2="160.02" width="0.1524" layer="91"/>
+<pinref part="IC5" gate="D" pin="I"/>
+<wire x1="10.16" y1="160.02" x2="10.16" y2="144.78" width="0.1524" layer="91"/>
+<junction x="10.16" y="160.02"/>
+<pinref part="IC5" gate="E" pin="I"/>
+<wire x1="10.16" y1="144.78" x2="10.16" y2="129.54" width="0.1524" layer="91"/>
+<junction x="10.16" y="144.78"/>
+<pinref part="GND18" gate="1" pin="GND"/>
+<junction x="10.16" y="129.54"/>
+</segment>
+<segment>
+<pinref part="IC4" gate="D" pin="I0"/>
+<pinref part="IC4" gate="D" pin="I1"/>
+<wire x1="50.8" y1="175.26" x2="50.8" y2="170.18" width="0.1524" layer="91"/>
+<pinref part="GND19" gate="1" pin="GND"/>
+<junction x="50.8" y="170.18"/>
 </segment>
 </net>
 </nets>

@@ -3024,6 +3024,12 @@ Mors</description>
 <via x="40.005" y="15.875" extent="1-16" drill="0.35"/>
 <via x="40.005" y="17.78" extent="1-16" drill="0.35"/>
 <via x="38.1" y="15.875" extent="1-16" drill="0.35"/>
+<contactref element="IC5" pad="5"/>
+<contactref element="IC5" pad="13"/>
+<contactref element="IC5" pad="9"/>
+<contactref element="IC5" pad="11"/>
+<contactref element="IC4" pad="12"/>
+<contactref element="IC4" pad="13"/>
 </signal>
 <signal name="COLON_T">
 <contactref element="IC2" pad="5"/>

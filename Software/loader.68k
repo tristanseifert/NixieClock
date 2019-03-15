@@ -1,6 +1,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; NixieClock bootloader
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  list
   org   $0
 
   include "hardware.68k"
@@ -223,3 +224,29 @@ EntryPoint:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Hardware helper routines
 	include	"68681.68k"
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Loader services
+Svc_Table:
+  ; offset 0: no-op
+  dc.w    Svc_NoOp-Svc_Table
+
+
+
+Svc_NoOp:
+  rts
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Bootloader API entry point
+  org     $7F80
+
+Svc_Entry:
+  ; get offset into table and jump
+  lea     Svc_Table(pc), a0
+  ; move.w  Svc_Table(pc, d0.w), d1
+  ; jmp     Svc_Table(pc, d1.w)
+  move.w  (a0, d0.w), d1
+  jmp     (a0, d1.w)
+
+  ; never reached
+  rts

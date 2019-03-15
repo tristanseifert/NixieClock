@@ -2,6 +2,7 @@
 ; NixieClock app
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; app starts at $8000 in ROM
+	list
 	org	$8000
 
   include "hardware.68k"

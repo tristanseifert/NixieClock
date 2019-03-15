@@ -16,3 +16,7 @@ Loader_IRQ5               = RAM_Loader + $20
 Loader_IRQ6               = RAM_Loader + $24
 ; Level 7 interrupt vector address
 Loader_IRQ7               = RAM_Loader + $28
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Location of API entry
+Loader_API_Entry          = ROM_Base + $7F80

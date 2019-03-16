@@ -11,6 +11,13 @@ MC68681_Base                = $020000
 
 ; RTC base
 RTC_Base                    = $030000
+RTC_Time_Reg                = RTC_Base
+
+NVRAM_Loader_Base           = (RTC_Base + $4)
+NVRAM_Loader_Mode           = (NVRAM_Loader_Base)
+NVRAM_Loader_AppAddr        = (NVRAM_Loader_Mode + $2)
+
+NVRAM_App_Base              = (NVRAM_Loader_Base + $1000)
 
 ; Nixie output register base
 Nixie_Base                  = $040000
@@ -26,3 +33,7 @@ VFD_Base                    = $050000
 
 ; RAM base
 RAM_Base                    = $060000
+; base address for loader
+RAM_Loader                  = RAM_Base
+; base address for app variables
+RAM_Base_App                = (RAM_Base + $1000)

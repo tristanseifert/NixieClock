@@ -30,7 +30,6 @@ AppInfoTable:
 EntryPoint:
 	; reset hardware
 	bsr.w		Nixie_Reset
-  bsr.w   MC68681_Reset
 
 	; enable interrupts now
 	move		#$2200, sr
@@ -40,5 +39,5 @@ EntryPoint:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Hardware helper routines
-	include	"68681.68k"
 	include	"nixie.68k"
+	include "vfd.68k"

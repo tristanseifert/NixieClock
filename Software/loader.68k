@@ -30,7 +30,8 @@ VectorTable:
   dc.l  IRQ_Lvl4, IRQ_Lvl5, IRQ_Lvl6, IRQ_Lvl7
 
   ; traps
-  rept 16
+  dc.l  Trap_EnterMonitor
+  rept 15
   dc.l  Exception_UnimplementedTrap
   endr
 
@@ -103,6 +104,11 @@ Exception_Handle:
   ; wait lol
   nop
   bra.s Exception_Handle
+
+; enter the monitor from a trap
+Trap_EnterMonitor:
+  nop
+  bra.s Trap_EnterMonitor
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; IRQ handlers
@@ -228,19 +234,32 @@ EntryPoint:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Loader services
 Svc_Table:
-  ; offset 0: no-op
+  ; 00: no-op
   dc.w    Svc_NoOp-Svc_Table
+  ; 01: write bytes to UART
+  dc.w    Svc_UartOut-Svc_Table
+  ; 02: read bytes from UART
+  dc.w    Svc_UartIn-Svc_Table
+  ; 03: Delay program
+  dc.w    Svc_Delay-Svc_Table
+  ; 04: Get input state
+  dc.w    Svc_ReadIO-Svc_Table
+  ; 05: Set output state
+  dc.w    Svc_WriteIO-Svc_Table
+Svc_Table_End:
 
-
-
-Svc_NoOp:
-  rts
+  include "loader_svc.68k"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Bootloader API entry point
   org     $7F80
 
 Svc_Entry:
+  ; check that the request is in bounds
+  moveq   #(Svc_Table_End-Svc_Table), d1
+  cmp.b   d0, d1
+  bpl.s   .Invalid
+
   ; get offset into table and jump
   lea     Svc_Table(pc), a0
   ; move.w  Svc_Table(pc, d0.w), d1
@@ -248,5 +267,7 @@ Svc_Entry:
   move.w  (a0, d0.w), d1
   jmp     (a0, d1.w)
 
-  ; never reached
+.Invalid:
+  ; set error code
+  moveq   #-1, d0
   rts

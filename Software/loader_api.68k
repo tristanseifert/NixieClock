@@ -2,6 +2,9 @@
 ; Bootloader API and defines
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+; Periodic timer (ticks at 100Hz)
+Loader_Tick               = RAM_Loader
+
 ; Level 1 interrupt vector address
 Loader_IRQ1               = RAM_Loader + $10
 ; Level 2 interrupt vector address

@@ -1,0 +1,136 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Loader services
+;
+; All services return a status code in d0. 0 for success, negative for error.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; 00 - Does nothing
+;
+; INPUTS:
+;   None
+; OUTPUTS:
+;   None
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Svc_NoOp:
+  moveq   #0, d0
+  rts
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; 01 - Writes a byte buffer to the specified UART.
+;
+; NOTE: This does NOT handle zero-terminated strings by default.
+;
+; INPUTS:
+;   a1: Buffer to read from
+;   d1: Number of bytes to write (high word) and UART number (low word)
+; OUTPUTS:
+;   d0: Error code (negative) or bytes written (> 0)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Svc_UartOut:
+  ; is the UART number in range?
+  cmp.w   #2, d0
+  bhs.s   .Invalid
+
+  ; length should be nonzero
+  swap    d0
+  tst.w   d0
+  beq.s   .Invalid
+
+  ; write to the appropriate UART
+
+.Done:
+  rts
+
+.Invalid:
+  moveq   #-1, d0
+  rts
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; 02 - Reads a byte buffer from the specified UART.
+;
+; INPUTS:
+;   a1: Buffer to read data to
+;   d1: Number of bytes to read (high word) and UART number (low word)
+;   d2: Maximum delay between bytes, in 1/100ths of a second.
+; OUTPUTS:
+;   d0: Error code (negative) or bytes read (> 0)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Svc_UartIn:
+  ; is the UART number in range?
+  cmp.w   #2, d0
+  bhs.s   .Invalid
+
+  ; length should be nonzero
+  swap    d0
+  tst.w   d0
+  beq.s   .Invalid
+
+  ; read from the appropriate UART
+
+.Done:
+  rts
+
+.Invalid:
+  moveq   #-1, d0
+  rts
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; 03 - Waits for a certain period of time.
+;
+; INPUTS:
+;   d1: How long to delay for, in 1/100ths of a second.
+; OUTPUTS:
+;   None
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Svc_Delay:
+  ; TODO: implement
+  rts
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; 04 - Reads the input lines on the 68681.
+;
+; INPUTS:
+;   None
+; OUTPUTS:
+;   d1: State of IO lines: bit 0 is IP0, bit 1 is IP1, and so forth.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Svc_ReadIO:
+  moveq   #0, d1
+  rts
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; 05 - Sets the state of the output lines on the 68681.
+;
+; INPUTS:
+;   d1: Which pins to set low (high word) and which to set high (low word). If
+;       the same pin is set to be both low and high, an error is returned.
+; OUTPUTS:
+; None
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Svc_WriteIO:
+  ; check that no pins are specified twice
+  moveq   #0, d2
+  move.w  d1, d2
+  swap    d1
+  and.w   d1, d2
+  bne.s   .Invalid
+
+  ; pins to set high are now in the high word of d1
+
+.Done
+  rts
+
+.Invalid:
+  moveq   #-1, d0
+  rts

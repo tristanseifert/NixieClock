@@ -14,15 +14,18 @@
 ; the top or bottom colon should be blinking.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+; How many 'ticks' elapse between cycling of any blinking digits.
+Nixie_Timer_Val             = 100
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Initializes all connected tube drivers. The display will be set to blank
 ; and colons will be off.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 Nixie_Reset:
   ; clear the memory we use
-  moveq   #7, d7
+  moveq   #(RAM_Nixie_Len/4)-1, d7
+  lea     (RAM_Nixie), a0
   moveq   #0, d0
-  lea     (RAM_Nixie_State), a0
 
 .clear:
   move.l  d0, (a0)+
@@ -30,6 +33,9 @@ Nixie_Reset:
 
   ; update the tubes
   bsr.s   Nixie_Update
+
+  ; initialize timer
+  move.b  #Nixie_Timer_Val, (RAM_Nixie_Timer)
 
   rts
 
@@ -64,6 +70,9 @@ Nixie_Timer:
   ; decrement timer
   subq.b  #1, (RAM_Nixie_Timer)
   bne.w   .done
+
+  ; reset the timer tho
+  move.b  #Nixie_Timer_Val, (RAM_Nixie_Timer)
 
   ; iterate over each output
   moveq   #7, d7

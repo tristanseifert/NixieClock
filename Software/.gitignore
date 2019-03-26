@@ -3,6 +3,9 @@ app.bin
 loader.bin
 rom.bin
 
+# build date, written to by build script
+builddate.txt
+
 # also, ignore listing files
 app.lst
 loader.lst

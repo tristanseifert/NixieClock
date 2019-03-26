@@ -2423,22 +2423,22 @@ Source: http://www.osram.convergy.de/ ... LG_LY N971.pdf</description>
 <contactref element="T2" pad="C"/>
 <wire x1="59.69" y1="48.26" x2="59.69" y2="52.07" width="0.2032" layer="1"/>
 </signal>
-<signal name="N$7">
-<contactref element="SV1" pad="4"/>
-</signal>
-<signal name="DRIVE_LO">
+<signal name="PWM0">
 <contactref element="SV1" pad="7"/>
 </signal>
-<signal name="DRIVE_MED">
+<signal name="PWM1">
 <contactref element="SV1" pad="5"/>
 </signal>
-<signal name="DRIVE_HI">
+<signal name="PWM2">
 <contactref element="SV1" pad="3"/>
 </signal>
 <signal name="N$8">
 <contactref element="R7" pad="2"/>
 <contactref element="LED1" pad="A"/>
 <wire x1="59.69" y1="24.55" x2="59.69" y2="22.07" width="0.2032" layer="1"/>
+</signal>
+<signal name="PWM3">
+<contactref element="SV1" pad="4"/>
 </signal>
 </signals>
 <mfgpreviewcolors>

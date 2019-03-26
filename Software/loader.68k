@@ -251,6 +251,13 @@ Svc_Table_End:
   include "loader_svc.68k"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Metadata
+Info_BuildDate:
+  incbin  "builddate.txt"
+  dc.b    0
+  even
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Bootloader API entry point
   org     $7F80
 

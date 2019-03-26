@@ -41,3 +41,11 @@ EntryPoint:
 ; Hardware helper routines
 	include	"nixie.68k"
 	include "vfd.68k"
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Metadata
+Info_BuildDate:
+	incbin  "builddate.txt"
+	dc.b    0
+	even

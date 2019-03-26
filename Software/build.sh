@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# add date
+rm -f builddate.txt
+date > builddate.txt
+
 # build loader
 echo "Assembling loader..."
 vasmm68k_mot -Fbin -m68008 -o loader.bin -L loader.lst loader.68k

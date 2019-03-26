@@ -12737,12 +12737,12 @@ Source: www.kingbright.com</description>
 <wire x1="137.16" y1="180.34" x2="137.16" y2="111.76" width="0.762" layer="92"/>
 </segment>
 </bus>
-<bus name="COLON_B,COLON_T,DRIVE_HI,DRIVE_LO,DRIVE_MED,LDIGIT[0..3],RDIGIT[0..3]">
-<segment>
-<wire x1="5.08" y1="35.56" x2="5.08" y2="5.08" width="0.762" layer="92"/>
-</segment>
+<bus name="COLON_B,COLON_T,DRIVE[0..3],LDIGIT[0..3],RDIGIT[0..3]">
 <segment>
 <wire x1="35.56" y1="35.56" x2="35.56" y2="5.08" width="0.762" layer="92"/>
+</segment>
+<segment>
+<wire x1="5.08" y1="35.56" x2="5.08" y2="5.08" width="0.762" layer="92"/>
 </segment>
 </bus>
 </busses>
@@ -13302,31 +13302,25 @@ Source: www.kingbright.com</description>
 <label x="78.74" y="142.24" size="1.778" layer="95" rot="R270" xref="yes"/>
 </segment>
 </net>
-<net name="DRIVE_LO" class="0">
+<net name="PWM0" class="0">
 <segment>
 <wire x1="27.94" y1="17.78" x2="33.02" y2="17.78" width="0.1524" layer="91"/>
 <wire x1="33.02" y1="17.78" x2="35.56" y2="15.24" width="0.1524" layer="91"/>
 <pinref part="SV1" gate="1" pin="7"/>
 </segment>
 </net>
-<net name="DRIVE_MED" class="0">
+<net name="PWM1" class="0">
 <segment>
 <wire x1="27.94" y1="15.24" x2="33.02" y2="15.24" width="0.1524" layer="91"/>
 <wire x1="33.02" y1="15.24" x2="35.56" y2="12.7" width="0.1524" layer="91"/>
 <pinref part="SV1" gate="1" pin="5"/>
 </segment>
 </net>
-<net name="DRIVE_HI" class="0">
+<net name="PWM2" class="0">
 <segment>
 <wire x1="27.94" y1="12.7" x2="33.02" y2="12.7" width="0.1524" layer="91"/>
 <wire x1="33.02" y1="12.7" x2="35.56" y2="10.16" width="0.1524" layer="91"/>
 <pinref part="SV1" gate="1" pin="3"/>
-</segment>
-</net>
-<net name="N$7" class="0">
-<segment>
-<wire x1="12.7" y1="12.7" x2="12.7" y2="12.7" width="0.1524" layer="91"/>
-<pinref part="SV1" gate="1" pin="4"/>
 </segment>
 </net>
 <net name="N$8" class="0">
@@ -13334,6 +13328,13 @@ Source: www.kingbright.com</description>
 <pinref part="R7" gate="G$1" pin="2"/>
 <pinref part="LED1" gate="G$1" pin="A"/>
 <junction x="228.6" y="40.64"/>
+</segment>
+</net>
+<net name="PWM3" class="0">
+<segment>
+<pinref part="SV1" gate="1" pin="4"/>
+<wire x1="5.08" y1="10.16" x2="7.62" y2="12.7" width="0.1524" layer="91"/>
+<wire x1="7.62" y1="12.7" x2="12.7" y2="12.7" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>

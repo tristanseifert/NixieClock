@@ -210,6 +210,7 @@ EntryPoint:
 
   ; set up hardware
   bsr.w   MC68681_Reset
+  bsr.w   RTC_Reset
 
   ; TODO: do stuff here, lmfao
   nop
@@ -230,6 +231,7 @@ EntryPoint:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Hardware helper routines
 	include	"68681.68k"
+  include "rtc.68k"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Loader services
@@ -246,6 +248,10 @@ Svc_Table:
   dc.w    Svc_ReadIO-Svc_Table
   ; 05: Set output state
   dc.w    Svc_WriteIO-Svc_Table
+  ; 06: Read RTC
+  dc.w    Svc_ReadRtc-Svc_Table
+  ; 07: Write RTC
+  dc.w    Svc_WriteRtc-Svc_Table
 Svc_Table_End:
 
   include "loader_svc.68k"

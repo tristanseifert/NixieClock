@@ -21,5 +21,21 @@ Loader_IRQ6               = RAM_Loader + $24
 Loader_IRQ7               = RAM_Loader + $28
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; In memory date/time variables
+Loader_DateTimeBase       = RAM_Loader + $30
+
+Loader_DateYear           = Loader_DateTimeBase + $00
+Loader_DateMonth          = Loader_DateTimeBase + $02
+Loader_DateDay            = Loader_DateTimeBase + $03
+
+Loader_TimeHours          = Loader_DateTimeBase + $04
+Loader_TimeMinutes        = Loader_DateTimeBase + $05
+Loader_TimeSeconds        = Loader_DateTimeBase + $06
+Loader_TimeMSeconds       = Loader_DateTimeBase + $07
+
+; Buffer for reading/writing 64 bits from RTC
+Loader_RTCBuffer          = Loader_DateTimeBase + $08
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Location of API entry
 Loader_API_Entry          = ROM_Base + $7F80

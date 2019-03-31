@@ -116,7 +116,7 @@ Svc_ReadIO:
 ;   d1: Which pins to set low (high word) and which to set high (low word). If
 ;       the same pin is set to be both low and high, an error is returned.
 ; OUTPUTS:
-; None
+;   None
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 Svc_WriteIO:
   ; check that no pins are specified twice
@@ -133,4 +133,29 @@ Svc_WriteIO:
 
 .Invalid:
   moveq   #-1, d0
+  rts
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; 06 - Reads the RTC and updates the in memory date/time variables.
+;
+; INPUTS:
+;   None
+; OUTPUTS:
+;   None
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Svc_ReadRtc:
+  bsr.w   RTC_Read
+  rts
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; 07 - Writes to the RTC the values in the memory DateTime struct.
+;
+; INPUTS:
+;   None
+; OUTPUTS:
+;   None
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Svc_WriteRtc:
+  bsr.w   RTC_Write
   rts

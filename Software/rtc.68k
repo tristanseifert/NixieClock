@@ -1,0 +1,159 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Routines for interfacing with the DS1244 RTC.
+;
+; The RTC is accessed serially through the least significant bit of the data
+; bus, after writing a 64-bit 'recognition sequence.' The clock's internal regs
+; are read/written as that whole 64-bit chunk.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Resets and initializes the RTC.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+RTC_Reset:
+  ; no-op... for now
+  rts
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Reads the RTC's time/date values.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+RTC_Read:
+  ; write magic sequence
+  bsr.w   RTC_WriteMagic
+
+  ; read 64 bits from clock
+  lea     (RTC_Time_Reg), a0
+  lea     (Loader_RTCBuffer), a1
+
+  moveq   #63, d0
+  moveq   #0, d2
+  moveq   #0, d3
+
+.ReadLoop:
+  ; Read from the clock and isolate the bit
+  move.b  (a0), d1
+  and.b   #$01, d1
+
+  ; shove it into the temporary variable
+  or.b    d1, d2
+  ror.b   #1, d2
+
+  ; have we read 8 bits?
+  addq.b  #1, d3
+  cmp.b   #8, d3
+  bne.s   .CheckNext
+
+  ; if so, store it, then reset counter
+  move.b  d2, (a1)+
+  moveq   #0, d2
+  moveq   #0, d3
+
+.CheckNext:
+  dbf     d0, .ReadLoop
+
+  ; convert the RAM buffer to the values we care about
+  lea     (Loader_RTCBuffer), a1
+
+  ; read milliseconds
+  move.b  (a1)+, d0
+  move.b  d0, (Loader_TimeMSeconds)
+  ; seconds
+  move.b  (a1)+, d0
+  and.b   #$7F, d0
+  move.b  d0, (Loader_TimeSeconds)
+  ; minutes
+  move.b  (a1)+, d0
+  and.b   #$7F, d0
+  move.b  d0, (Loader_TimeMinutes)
+  ; hours
+  move.b  (a1)+, d0
+  and.b   #$3F, d0
+  move.b  d0, (Loader_TimeHours)
+
+  ; day of week
+  move.b  (a1)+, d0
+  and.b   #$7, d0
+  move.b  d0, (Loader_DateDayOfWeek)
+  ; day of month
+  move.b  (a1)+, d0
+  and.b   #$3F, d0
+  move.b  d0, (Loader_DateDay)
+  ; month
+  move.b  (a1)+, d0
+  and.b   #$1F, d0
+  move.b  d0, (Loader_DateMonth)
+  ; year
+  move.b  (a1), d0
+  move.b  d0, (Loader_DateYear)
+
+  rts
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Writes the RTC's time/date values
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+RTC_Write:
+  ; TODO: update RAM buffer
+
+  ; write magic sequence
+  bsr.w   RTC_WriteMagic
+
+  ; write 64 bits from buffer
+  lea     (RTC_Time_Reg), a0
+  lea     (Loader_RTCBuffer), a1
+
+  moveq   #63, d0
+
+.WriteLoop:
+  ; is this the start of a byte?
+  move.b  d0, d2
+  and.b   #$7, d2
+  bne.s   .notStart
+
+  ; if so, read the byte
+  move.b   (a1)+, d1
+
+.notStart:
+  ; write the bit to the RTC
+  move.b  d1, (a0)
+
+  ; shift bit
+  lsr.b   #1, d1
+  ; write next bit
+  dbf     d0, .WriteLoop
+
+  rts
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Writes the 64-bit recognition sequence to the RTC so that we can access the
+; registers.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+RTC_WriteMagic:
+  lea     (RTC_Time_Reg), a0
+  lea     RTC_MagicSeq(pc), a1
+
+  moveq   #63, d0
+
+.WriteLoop:
+  ; is this the start of a byte?
+  move.b  d0, d2
+  and.b   #$7, d2
+  bne.s   .notStart
+
+  ; if so, read the byte
+  move.b   (a1)+, d1
+
+.notStart:
+  ; write the bit
+  move.b  d1, (a0)
+
+  ; shift bit
+  lsr.b   #1, d1
+  ; write next bit
+  dbf     d0, .WriteLoop
+
+  rts
+
+RTC_MagicSeq:
+  dc.b    $C5, $3A, $A3, $5C, $C5, $3A, $A3, $5C
+  even

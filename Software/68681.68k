@@ -2,23 +2,96 @@
 ; Routines for interfacing with the MC68681 DUART.
 ;
 ; UART 0 is used by the bootloader and for logging from the application; UART 1
-; can be used by the application for whatever purpose it desires.
+; can be used by the application for whatever purpose it desires, and may be
+; reconfigured as desired.
 ;
-; On reset, both UARTs are configured to operate at 115200 baud, and a periodic
+; On reset, both UARTs are configured to operate at 9600 baud, and a periodic
 ; timer is set to fire every 10ms.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; READ registers
-MC68681_RegR_ISR            = $5
 
-; WRITE registers
+; WRITE: channel A mode register
+MC68681_W_MRnA              = $0
+; WRITE: channel A clock select
+MC68681_W_CSRA              = $1
+; READ: channel A status register
+MC68681_R_SRA               = $1
+; WRITE: channel A command register
+MC68681_W_CRA               = $2
+; READ: masked IRQ status
+MC68681_R_MISR              = $2
+; WRITE: channel A TX holding register
+MC68681_W_THRA              = $3
+; READ: channel A RX holding register
+MC68681_R_RHRA              = $3
+
+; WRITE: AUX control register
+MC68681_W_ACR               = $4
+; READ: Input port change register
+MC68681_R_ACR               = $4
+
+; WRITE: IRQ mask register
+MC68681_W_IMR               = $5
+; READ: IRQ status register
+MC68681_R_ISR               = $5
+
+; WRITE: Counter/Timer upper byte
+MC68681_W_CTU               = $6
+; READ: Counter/Timer upper byte
+MC68681_R_CTU               = MC68681_W_CTU
+
+; WRITE: Counter/Timer lower byte
+MC68681_W_CTL               = $7
+; READ: Counter/Timer lower byte
+MC68681_R_CTL               = MC68681_W_CTL
+
+; WRITE: channel B mode register
+MC68681_W_MRnB              = $8
+; WRITE: channel B clock select
+MC68681_W_CSRB              = $9
+; READ: channel B status register
+MC68681_R_SRB               = $9
+; WRITE: channel B command register
+MC68681_W_CRB               = $A
+; WRITE: channel B TX holding register
+MC68681_W_THRB              = $B
+; READ: channel B RX holding register
+MC68681_R_RHRB              = $B
+
+; WRITE: IRQ vector register
+MC68681_W_IVR               = $C
+; READ: IRQ vector register
+MC68681_R_IVR               = MC68681_W_IVR
+
+
+; WRITE: output port configuration
+MC68681_W_OPCR              = $D
+; READ: input port
+MC68681_R_IP                = $D
+
+; WRITE: set output port register bits
+MC68681_W_SOPBC             = $E
+; READ: Start counter/timer
+MC68681_R_SCC               = $E
+
+; WRITE: clear output port register bits
+MC68681_W_COPBC             = $F
+; READ: stop counter/timer
+MC68681_R_STC               = $F
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Resets and initializes the 68681 peripheral.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 MC68681_Reset:
   moveq   #0, d0
-  moveq   #0, d1
+
+  ; clear memory (128 bytes)
+  lea     (Loader_68681Base), a0
+  moveq   #31, d1
+
+.Clear:
+  move.l  d0, (a0)+
+  dbf     d1, .Clear
 
   ; install interrupt handler (level 2)
   move.l  #MC68681_ISR, (Loader_IRQ2)
@@ -26,6 +99,8 @@ MC68681_Reset:
   ; copy registers
   lea     (MC68681_Reset_Data), a0
   lea     (MC68681_Base), a1
+
+  moveq   #0, d1
 
 .next:
   ; load register number
@@ -43,11 +118,21 @@ MC68681_Reset:
   bra.s   .next
 
 .done:
+  ; lastly, start the timer by reading from the appropriate address
+  move.b  MC68681_R_SCC(a1), d0
+
   rts
 
 ; a set of 2-byte tuples in the format of register, value; terminated with a
 ; register number of $FF.
 MC68681_Reset_Data:
+  ; aux control: bit rate set 0, timer mode with CLK/16. no input change IRQ
+  dc.b    MC68681_W_ACR, %11110000
+
+  ; configure timer with a value of 18432 ($4800), this gives us 100Hz
+  dc.b    MC68681_W_CTL, $00
+  dc.b    MC68681_W_CTL, $48
+
   ; port A: reset receiver, transmitter, error status, break change interrupt
   dc.b    MC68681_W_CRA, %00100000
   dc.b    MC68681_W_CRA, %00110000
@@ -58,7 +143,8 @@ MC68681_Reset_Data:
   dc.b    MC68681_W_MRnA, %00010011
   dc.b    MC68681_W_MRnA, %00000111
   ; port A: set 9600 baud, set active mode, enable TX and RX
-  dc.b    MC68681_W_CRA, %10010000 ; clear BRG bit (X = 0)
+  dc.b    MC68681_W_CRA, %10010000 ; clear RX BRG bit (X = 0)
+  dc.b    MC68681_W_CRA, %10110000 ; clear TX BRG bit (X = 0)
   dc.b    MC68681_W_CSRA, %10111011
   dc.b    MC68681_W_CRA, %11010000
   dc.b    MC68681_W_CRA, %00000101
@@ -74,7 +160,8 @@ MC68681_Reset_Data:
   dc.b    MC68681_W_MRnB, %00010011
   dc.b    MC68681_W_MRnB, %00000111
   ; port B: set 9600 baud, set active mode, enable TX and RX
-  dc.b    MC68681_W_CRB, %10010000 ; clear BRG bit (X = 0)
+  dc.b    MC68681_W_CRB, %10010000 ; clear RX BRG bit (X = 0)
+  dc.b    MC68681_W_CRB, %10110000 ; clear TX BRG bit (X = 0)
   dc.b    MC68681_W_CSRB, %10111011
   dc.b    MC68681_W_CRB, %11010000
   dc.b    MC68681_W_CRB, %00000101
@@ -85,6 +172,12 @@ MC68681_Reset_Data:
   ; clear all outputs except !VFD_RESET
   dc.b    MC68681_W_SOPBC, %11101111
   dc.b    MC68681_W_COPBC, %00010000
+
+  ; vector
+  dc.b    MC68681_W_IVR, 26
+
+  ; configure interrupts: RXRDY A/B, break change A, counter rdy
+  dc.b    MC68681_W_IMR, %00101110
 
   ; done
   dc.b    $FF, 0
@@ -128,16 +221,88 @@ MC68681_UpdateInput:
 
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Writes a string of bytes to an UART. This routine blocks until all data has
+; been transmitted.
+;
+; If there is too much of a wait to transmit a new byte (we wait for 2048
+; iterations of the tx ready check loop) the routine aborts.
+;
+; INPUTS:
+;   d0: High word: number of bytes to transmit. Low word: UART (0 = A, 1 = B)
+;   a0: Data to transmit
+;
+; OUTPUTS:
+;   d0: Status: 0 if successful, negative otherwise.
+;
+; Clobbers:
+;   d1, d2, a1, a2
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+MC68681_UartTx:
+  ; set the base address: channel B uses same regs as A but at offset +$8
+  lea     (MC68681_Base), a1
+
+  lsl.w   #3, d0
+  add.w   d0, a1
+
+  ; get just the number of bytes into d0
+  moveq   #0, d1
+  and.w   d1, d0
+  swap    d0
+
+  ; subtract one from the counter
+  subq.l  #1, d0
+
+.NextChar:
+  ; clear timeout counter
+  moveq   #0, d1
+
+.WaitTxRdy:
+  ; increment timeout: if it reaches 2048, abort
+  addq.l  #1, d1
+  btst    #11, d1
+  bne.s   .Timeout
+
+  ; wait for TXRDY or TXEMT to be set
+  move.b  MC68681_R_SRA(a1), d2
+  and.b   #%00001100, d2
+  beq.s   .WaitTxRdy
+
+  ; write a byte of data
+  move.b  (a0)+, MC68681_W_THRA(a1)
+
+  ; repeat until all data is written
+  dbf     d0, .NextChar
+
+.Done:
+  ; set success status
+  moveq   #0, d0
+  rts
+
+.Timeout:
+  ; set error code
+  moveq   #-1, d0
+  rts
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; 68681 ISR
+;
+; The primary purpose of this is to handle receiving characters. They are
+; continuously written into an in-memory buffer, which clients can choose to
+; wait on.
+;
+; If the buffer is close to filling up, the ISR will send an XOFF character to
+; hopefully prevent an overrun: reading from the buffer will automatically
+; send an XON character to resume data transfer.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 MC68681_ISR:
   ; save regs
   move.l  d0, -(sp)
 
   ; read ISR
-  move.b  (MC68681_Base+MC68681_RegR_ISR), d0
+  move.b  (MC68681_Base+MC68681_R_ISR), d0
 
 .restore:
 

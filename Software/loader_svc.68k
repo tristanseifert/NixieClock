@@ -40,6 +40,9 @@ Svc_UartOut:
   beq.s   .Invalid
 
   ; write to the appropriate UART
+  move.l  a1, a0
+  move.l  d1, d0
+  bra.w   MC68681_UartTx
 
 .Done:
   rts
@@ -170,7 +173,7 @@ Svc_ReadRtc:
   rts
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; 07 - Writes to the RTC the values in the memory DateTime struct.
+; 07 - Writes to the RTC the values in the memory date/time variables.
 ;
 ; INPUTS:
 ;   None

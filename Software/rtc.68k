@@ -10,7 +10,14 @@
 ; Resets and initializes the RTC.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 RTC_Reset:
-  ; no-op... for now
+  ; clear RTC memory
+  lea     (Loader_DateTimeBase), a0
+  moveq   #0, d0
+
+  rept 4
+  move.l  d0, (a0)+
+  endr
+
   rts
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

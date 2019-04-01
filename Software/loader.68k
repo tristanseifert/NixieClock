@@ -212,6 +212,8 @@ EntryPoint:
   bsr.w   MC68681_Reset
   bsr.w   RTC_Reset
 
+  ; print a message
+
   ; TODO: do stuff here, lmfao
   nop
   bra.s   EntryPoint
@@ -227,6 +229,8 @@ EntryPoint:
   ; set up stack and jump to app
   move.l  4(a0), sp
   jmp     (a0)
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Hardware helper routines

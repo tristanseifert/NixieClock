@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="9.3.0">
+<eagle version="9.3.2">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -22612,7 +22612,9 @@ http://www.st.com&lt;p&gt;
 <part name="GND1" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="GND2" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="IC2" library="Parts" deviceset="AS6C1008" device="" package3d_urn="urn:adsk.eagle:package:18076/2" value="AS6C1008"/>
-<part name="IC3" library="Parts" deviceset="SST39SF0X0" device="PDIP32" package3d_urn="urn:adsk.eagle:package:18076/2" value="39SF020"/>
+<part name="IC3" library="Parts" deviceset="SST39SF0X0" device="PDIP32" package3d_urn="urn:adsk.eagle:package:18076/2" value="39SF010">
+<attribute name="MOUSER" value="804-39SF010A7CPHE"/>
+</part>
 <part name="P+3" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="P+4" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="P+5" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>

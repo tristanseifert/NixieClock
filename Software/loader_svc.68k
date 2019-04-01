@@ -104,7 +104,14 @@ Svc_Delay:
 ;   d1: State of IO lines: bit 0 is IP0, bit 1 is IP1, and so forth.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 Svc_ReadIO:
-  moveq   #0, d1
+  ; update state from hardware
+  ; bsr.w   MC68681_UpdateInput
+
+  ; read port state
+  move.b  (Loader_68681In), d1
+
+  ; return success
+  moveq   #0, d0
   rts
 
 
@@ -126,9 +133,23 @@ Svc_WriteIO:
   and.w   d1, d2
   bne.s   .Invalid
 
-  ; pins to set high are now in the high word of d1
+  ; bits to clear are in the low word of d1, so AND against its inverse
+  not.w   d1
+  and.b   d1, (Loader_68681Out)
 
-.Done
+  ; extract bits to set high (high word of d1)
+  move.w  d1, d2
+  swap    d1
+  and.w   #$00FF, d1
+
+  ; we now have the bits to set in the low byte of d1, so OR into memory state
+  or.b    d1, (Loader_68681Out)
+
+  ; actually update output
+  bsr.w   MC68681_UpdateOutput
+  moveq   #0, d0
+
+.Done:
   rts
 
 .Invalid:

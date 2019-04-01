@@ -25,8 +25,9 @@ Loader_IRQ7               = RAM_Loader + $28
 Loader_DateTimeBase       = RAM_Loader + $30
 
 Loader_DateYear           = Loader_DateTimeBase + $00
-Loader_DateMonth          = Loader_DateTimeBase + $02
-Loader_DateDay            = Loader_DateTimeBase + $03
+Loader_DateMonth          = Loader_DateTimeBase + $01
+Loader_DateDay            = Loader_DateTimeBase + $02
+Loader_DateDayOfWeek      = Loader_DateTimeBase + $03
 
 Loader_TimeHours          = Loader_DateTimeBase + $04
 Loader_TimeMinutes        = Loader_DateTimeBase + $05
@@ -35,6 +36,15 @@ Loader_TimeMSeconds       = Loader_DateTimeBase + $07
 
 ; Buffer for reading/writing 64 bits from RTC
 Loader_RTCBuffer          = Loader_DateTimeBase + $08
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; 68681 buffers/state
+Loader_68681Base          = RAM_Loader + $40
+
+; output port state
+Loader_68681Out           = Loader_68681Base + $00
+; input port state
+Loader_68681In            = Loader_68681Base + $01
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Location of API entry

@@ -48,8 +48,86 @@ MC68681_Reset:
 ; a set of 2-byte tuples in the format of register, value; terminated with a
 ; register number of $FF.
 MC68681_Reset_Data:
+  ; port A: reset receiver, transmitter, error status, break change interrupt
+  dc.b    MC68681_W_CRA, %00100000
+  dc.b    MC68681_W_CRA, %00110000
+  dc.b    MC68681_W_CRA, %01000000
+  dc.b    MC68681_W_CRA, %01010000
+  ; port A: RxRDY IRQ, no parity, character FIFO errors, normal operation, 8N1
+  dc.b    MC68681_W_CRA, %00010000 ; reset MRn pointer
+  dc.b    MC68681_W_MRnA, %00010011
+  dc.b    MC68681_W_MRnA, %00000111
+  ; port A: set 9600 baud, set active mode, enable TX and RX
+  dc.b    MC68681_W_CRA, %10010000 ; clear BRG bit (X = 0)
+  dc.b    MC68681_W_CSRA, %10111011
+  dc.b    MC68681_W_CRA, %11010000
+  dc.b    MC68681_W_CRA, %00000101
+
+
+  ; port B: reset receiver, transmitter, error status, break change interrupt
+  dc.b    MC68681_W_CRB, %00100000
+  dc.b    MC68681_W_CRB, %00110000
+  dc.b    MC68681_W_CRB, %01000000
+  dc.b    MC68681_W_CRB, %01010000
+  ; port B: RxRDY IRQ, no parity, character FIFO errors, normal operation, 8N1
+  dc.b    MC68681_W_CRB, %00010000 ; reset MRn pointer
+  dc.b    MC68681_W_MRnB, %00010011
+  dc.b    MC68681_W_MRnB, %00000111
+  ; port B: set 9600 baud, set active mode, enable TX and RX
+  dc.b    MC68681_W_CRB, %10010000 ; clear BRG bit (X = 0)
+  dc.b    MC68681_W_CSRB, %10111011
+  dc.b    MC68681_W_CRB, %11010000
+  dc.b    MC68681_W_CRB, %00000101
+
+  ; configure output port: OP1 = OUT1, OP3 = OUT0, OP4 = !VFD_RESET, OP5 = STATUS1, OP7 = STATUS0
+  dc.b    MC68681_W_OPCR, %00000000
+
+  ; clear all outputs except !VFD_RESET
+  dc.b    MC68681_W_SOPBC, %11101111
+  dc.b    MC68681_W_COPBC, %00010000
+
+  ; done
   dc.b    $FF, 0
   even
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Updates the state of the 68681 output register from memory.
+;
+; Since the output status registers are inverted from their real state, any
+; bits we want to be high need to actually be cleared in the chip. This is
+; accomplished with a bit of clever bit twiddling.
+;
+; Clobbers:
+;   d0, a0
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+MC68681_UpdateOutput:
+  lea     (MC68681_Base), a0
+
+  ; read the output
+  move.b  (Loader_68681Out), d0
+
+  ; bits that are SET in memory must be written to the CLEAR area
+  move.b  d0, MC68681_W_COPBC(a0)
+
+  ; flip the bits, and write those to the SET area
+  not.b   d0
+  move.b  d0, MC68681_W_SOPBC(a0)
+
+  rts
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Updates the in-memory copy of the input port.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+MC68681_UpdateInput:
+  ; simple, just read the port, lol
+  lea     (MC68681_Base), a0
+  move.b  MC68681_R_IP(a0), (Loader_68681In)
+  rts
+
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; 68681 ISR

@@ -9,6 +9,75 @@ ROM_App_Base                = $008000
 ; 68681 base
 MC68681_Base                = $020000
 
+; WRITE: channel A mode register
+MC68681_W_MRnA              = $0
+; WRITE: channel A clock select
+MC68681_W_CSRA              = $1
+; READ: channel A status register
+MC68681_R_SRA               = $1
+; WRITE: channel A command register
+MC68681_W_CRA               = $2
+; READ: masked IRQ status
+MC68681_R_MISR              = $2
+; WRITE: channel A TX holding register
+MC68681_W_THRA              = $3
+; READ: channel A RX holding register
+MC68681_R_RHRA              = $3
+
+; WRITE: AUX control register
+MC68681_W_ACR               = $4
+; READ: Input port change register
+MC68681_R_ACR               = $4
+
+; WRITE: IRQ mask register
+MC68681_W_IMR               = $5
+; READ: IRQ status register
+MC68681_R_ISR               = $5
+
+; WRITE: Counter/Timer upper byte
+MC68681_W_CTU               = $6
+; READ: Counter/Timer upper byte
+MC68681_R_CTU               = MC68681_W_CTU
+
+; WRITE: Counter/Timer lower byte
+MC68681_W_CTL               = $7
+; READ: Counter/Timer lower byte
+MC68681_R_CTL               = MC68681_W_CTL
+
+; WRITE: channel B mode register
+MC68681_W_MRnB              = $8
+; WRITE: channel B clock select
+MC68681_W_CSRB              = $9
+; READ: channel B status register
+MC68681_R_SRB               = $9
+; WRITE: channel B command register
+MC68681_W_CRB               = $A
+; WRITE: channel B TX holding register
+MC68681_W_THRB              = $B
+; READ: channel B RX holding register
+MC68681_R_RHRB              = $B
+
+; WRITE: IRQ vector register
+MC68681_W_IVR               = $C
+; READ: IRQ vector register
+MC68681_R_IVR               = MC68681_W_IVR
+
+
+; WRITE: output port configuration
+MC68681_W_OPCR              = $D
+; READ: input port
+MC68681_R_IP                = $D
+
+; WRITE: set output port register bits
+MC68681_W_SOPBC             = $E
+; READ: Start counter/timer
+MC68681_R_SCC               = $E
+
+; WRITE: clear output port register bits
+MC68681_W_COPBC             = $F
+; READ: stop counter/timer
+MC68681_R_STC               = $F
+
 ; RTC base
 RTC_Base                    = $030000
 RTC_Time_Reg                = RTC_Base

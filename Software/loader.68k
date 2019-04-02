@@ -10,7 +10,7 @@
 
 ; vector table
 VectorTable:
-  dc.l  $80000, EntryPoint
+  dc.l  RAM_Stack_Base, EntryPoint
 
   dc.l  Exception_BusError, Exception_AddressError, Exception_Illegal, Exception_DivByZero
   dc.l  Exception_Chk, Exception_TrapV, Exception_PrivilegeViolation, Exception_Trace
@@ -212,16 +212,22 @@ EntryPoint:
   bsr.w   MC68681_Reset
   bsr.w   RTC_Reset
 
-  ; print a message
+  ; enter loader menu
+  bra.w   Loader_Menu
 
   ; TODO: do stuff here, lmfao
   nop
   bra.s   EntryPoint
 
-  ; jump to the app
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Given a base address, validate the app header at that location, and if valid,
+; jump to it.
+;
+; a0: Start of app header
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Loader_RunApp:
+  ; disable all interrupts
   move    #$2700, sr
-
-  lea     ROM_App_Base, a0
 
   ; TODO: validate version
   move.w  (a0)+, d0
@@ -231,6 +237,177 @@ EntryPoint:
   jmp     (a0)
 
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Enters the loader main menu.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Loader_Menu:
+  move    #$2200, sr
+
+.MainLoop:
+  ; print message
+  lea     Loader_Menu_Text(pc), a0
+  bsr.w   lib_strlen
+
+  swap    d0
+  move.w  #0, d0
+
+  lea     Loader_Menu_Text(pc), a0
+  bsr.w   MC68681_UartRx
+
+  ; attempt to receive response
+  bsr.w   MC68681_UartRxChar
+  swap    d0
+  tst.w   d0
+  beq.s   .CheckResponse
+
+  ; there was an error
+  ; todo: handle it
+  bra.s   .MainLoop
+
+.CheckResponse:
+  ; start ROM app?
+  cmp.b   #'1', d0
+  bne.s   .CheckRAMApp
+
+  ; start app in ROM at $008000
+  lea     ROM_App_Base, a0
+  bsr.w   Loader_RunApp
+
+  ; if we get here, d0 will contain an error code
+  lea     Loader_Menu_ErrRunApp(pc), a0
+  bsr.w   Loader_Menu_PrintError
+  bra.s   .MainLoop
+
+.CheckRAMApp:
+  cmp.b   #'2', d0
+  bne.s   .CheckDownload
+
+  ; start app in RAM at $070000
+  lea     $070000, a0
+  bsr.w   Loader_RunApp
+
+  ; if we get here, d0 will contain an error code
+  lea     Loader_Menu_ErrRunApp(pc), a0
+  bsr.w   Loader_Menu_PrintError
+  bra.s   .MainLoop
+
+.CheckDownload:
+  cmp.b   #'3', d0
+  bne.s   .CheckMonitor
+
+  ; enter download subroutine
+  ; XXX: todo
+  bra.s   .MainLoop
+
+.CheckMonitor:
+  cmp.b   #'4', d0
+  bne.s   .InvalidOption
+
+  ; enter monitor
+  ; XXX: todo
+  bra.s   .MainLoop
+
+.InvalidOption:
+  ; there was an invalid selection
+  lea     Loader_Menu_Invalid(pc), a0
+  bsr.w   lib_strlen
+
+  swap    d0
+  move.w  #0, d0
+
+  lea     Loader_Menu_Invalid(pc), a0
+  bsr.w   MC68681_UartRx
+
+  ; repeat main loop
+  bra.s   .MainLoop
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Prints an error code (in d0) with the description string in a0, similar to
+; perror().
+;
+; INPUTS:
+;   d0: error code
+;   a0: description string (zero terminated)
+; OUTPUTS:
+;   None
+; CLOBBERS:
+;   d0-d2, a0-a1
+;
+Loader_Menu_PrintError:
+  ; save the error code for later
+  move.l  d0, -(sp)
+
+  ; first, print the description string
+  move.l  a0, a1
+  bsr.w   lib_strlen
+
+  swap    d0
+  move.w  #0, d0
+
+  move.l  a1, a0
+  bsr.w   MC68681_UartRx
+
+  ; print a colon
+  moveq   #2, d0
+  swap    d0
+  lea     .Colon(pc), a0
+  bsr.w   MC68681_UartRx
+
+  ; now, get the error code and print it in hex
+  move.l  (sp)+, d0
+  lea     -8(sp), a0
+  bsr.w   lib_dectohex
+
+  moveq   #8, d0
+  swap    d0
+  lea     -8(sp), a0
+  ; bsr.w   MC68681_UartRx
+  bra.w   MC68681_UartRx
+
+  ; done!
+.Done:
+  rts
+
+.Colon:
+  dc.b    ": ", 0
+  even
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Loader_Menu_Text:
+  dc.b    "Loader Menu\n"
+  dc.b    "Select an option\n"
+  dc.b    "1) Start ROM app from $008000\n"
+  dc.b    "2) Start RAM app from $070000\n"
+  dc.b    "3) Download to RAM\n"
+  dc.b    "4) Enter monitor\n"
+  dc.b    "> ", 0
+  even
+
+Loader_Menu_Invalid:
+  dc.b    "Invalid selection\n", 0
+  even
+
+Loader_Menu_ErrRunApp:
+  dc.b    "Error starting app", 0
+  even
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Loader tick function, this should be called periodically at 50Hz.
+;
+; This routine is guaranteed to not clobber any registers. It can, however, use
+; the stack to back up registers.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Loader_Handle_Tick:
+  ; just increment timer
+  addq.l  #1, (Loader_Tick)
+  rts
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; library type routines
+  include "lib.68k"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Hardware helper routines
@@ -269,9 +446,16 @@ Info_BuildDate:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Bootloader API entry point
+;
+; Back up d1, a0 and restore when we leave the function. d0 is overwritten
+; anyways by the status in routines.
+;
   org     $7F80
 
 Svc_Entry:
+  ; back up d1, a0
+  movem.l d1/a0, -(sp)
+
   ; check that the request is in bounds
   moveq   #(Svc_Table_End-Svc_Table), d1
   cmp.b   d0, d1
@@ -282,9 +466,12 @@ Svc_Entry:
   ; move.w  Svc_Table(pc, d0.w), d1
   ; jmp     Svc_Table(pc, d1.w)
   move.w  (a0, d0.w), d1
-  jmp     (a0, d1.w)
+  jsr     (a0, d1.w)
+
+.Cleanup:
+  movem.l (sp)+, d1/a0
 
 .Invalid:
   ; set error code
   moveq   #-1, d0
-  rts
+  bra.s   .Cleanup

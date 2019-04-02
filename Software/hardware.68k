@@ -37,3 +37,6 @@ RAM_Base                    = $060000
 RAM_Loader                  = RAM_Base
 ; base address for app variables
 RAM_Base_App                = (RAM_Base + $1000)
+
+; the last $200 bytes of RAM ($7FE00 - $80000) are reserved as stack
+RAM_Stack_Base              = RAM_Base + $020000

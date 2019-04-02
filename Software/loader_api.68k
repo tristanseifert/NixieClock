@@ -61,5 +61,9 @@ Loader_68681_ReadBufSzB   = Loader_68681Base + $25
 Loader_68681_ReadBufB     = Loader_68681Base + $26
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Address of $400 byte UART receive buffer
+Loader_Uart_Rx_Buffer     = RAM_Loader + $C00
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Location of API entry
 Loader_API_Entry          = ROM_Base + $7F80

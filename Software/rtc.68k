@@ -22,6 +22,9 @@ RTC_Reset:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Reads the RTC's time/date values.
+;
+; Clobbers:
+;   d0-d3, a0-a1
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 RTC_Read:
   ; write magic sequence
@@ -96,6 +99,9 @@ RTC_Read:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Writes the RTC's time/date values
+;
+; Clobbers:
+;   d0-d3, a0-a1
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 RTC_Write:
   ; TODO: update RAM buffer
@@ -134,6 +140,9 @@ RTC_Write:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Writes the 64-bit recognition sequence to the RTC so that we can access the
 ; registers.
+;
+; Clobbers:
+;   d0-d2, a0-a1
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 RTC_WriteMagic:
   lea     (RTC_Time_Reg), a0

@@ -30,6 +30,9 @@ Svc_NoOp:
 ;   d0: Error code (negative) or bytes written (> 0)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 Svc_UartOut:
+  ; back up registers
+  move.l  d2, -(sp)
+
   ; is the UART number in range?
   cmp.w   #2, d0
   bhs.s   .Invalid
@@ -42,14 +45,17 @@ Svc_UartOut:
   ; write to the appropriate UART
   move.l  a1, a0
   move.l  d1, d0
-  bra.w   MC68681_UartTx
+  bsr.w   MC68681_UartTx
 
 .Done:
+  ; Restore registers
+  move.l  d2, (sp)+
+
   rts
 
 .Invalid:
   moveq   #-1, d0
-  rts
+  bra.s   .Done
 
 
 
@@ -59,11 +65,13 @@ Svc_UartOut:
 ; INPUTS:
 ;   a1: Buffer to read data to
 ;   d1: Number of bytes to read (high word) and UART number (low word)
-;   d2: Maximum delay between bytes, in 1/100ths of a second.
 ; OUTPUTS:
 ;   d0: Error code (negative) or bytes read (> 0)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 Svc_UartIn:
+  ; back up registers
+  movem.l  d2-d3, -(sp)
+
   ; is the UART number in range?
   cmp.w   #2, d0
   bhs.s   .Invalid
@@ -74,13 +82,36 @@ Svc_UartIn:
   beq.s   .Invalid
 
   ; read from the appropriate UART
+  move.l  a1, a0
+  move.l  d1, d0
+  bsr.w   MC68681_UartTx
+
+  ; reformat return code d0
+  swap    d0
+  tst.w   d0
+  bne.s   .NoError
+
+  ; there were errors. extract them
+  moveq   #0, d2
+  swap    d0
+  and.w   d2, d0
+  swap    d0
+  neg.l   d0
+
+  bra.s   .Done
+
+.NoError:
+  ; nothing needs to be done, we're good
+  nop
 
 .Done:
+  ; restore registers
+  movem.l  (sp)+, d2-d3
   rts
 
 .Invalid:
   moveq   #-1, d0
-  rts
+  bra.s   .Done
 
 
 
@@ -104,17 +135,14 @@ Svc_Delay:
 ; INPUTS:
 ;   None
 ; OUTPUTS:
-;   d1: State of IO lines: bit 0 is IP0, bit 1 is IP1, and so forth.
+;   d0: State of IO lines: bit 0 is IP0, bit 1 is IP1, and so forth.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 Svc_ReadIO:
   ; update state from hardware
   ; bsr.w   MC68681_UpdateInput
 
   ; read port state
-  move.b  (Loader_68681In), d1
-
-  ; return success
-  moveq   #0, d0
+  move.b  (Loader_68681In), d0
   rts
 
 
@@ -129,6 +157,9 @@ Svc_ReadIO:
 ;   None
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 Svc_WriteIO:
+  ; back up registers
+  move.l  d2, -(sp)
+
   ; check that no pins are specified twice
   moveq   #0, d2
   move.w  d1, d2
@@ -153,11 +184,13 @@ Svc_WriteIO:
   moveq   #0, d0
 
 .Done:
+  ; Restore registers
+  move.l  (sp)+, d2
   rts
 
 .Invalid:
   moveq   #-1, d0
-  rts
+  bra.s   .Done
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -169,7 +202,15 @@ Svc_WriteIO:
 ;   None
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 Svc_ReadRtc:
+  ; back up registers
+  movem.l d0/d2-d3/a1, -(sp)
+
   bsr.w   RTC_Read
+
+  ; restore registers
+  movem.l (sp)+, d0/d2-d3/a1
+  moveq   #0, d0
+  
   rts
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -181,5 +222,13 @@ Svc_ReadRtc:
 ;   None
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 Svc_WriteRtc:
+  ; back up registers
+  movem.l d0/d2-d3/a1, -(sp)
+
   bsr.w   RTC_Write
+
+  ; restore registers
+  movem.l (sp)+, d0/d2-d3/a1
+  moveq   #0, d0
+
   rts

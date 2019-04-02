@@ -1,0 +1,74 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Provides some general helpful library functions.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Finds the length of a C-style (zero terminated) string.
+;
+; INPUTS:
+;   a0: String location
+; OUTPUTS:
+;   d0: Length of string
+; CLOBBERS:
+;   d0, a0
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+lib_strlen:
+  ; clear the length counter
+  moveq   #0, d0
+
+.CheckNext:
+  ; did we find the zero byte?
+  tst.b   (a0)+
+  beq.s   .Done
+
+  ; nope, check next byte
+  addq.l  #1, d0
+  bra.s   .CheckNext
+
+.Done:
+  rts
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Converts the unsigned 32-bit integer in d0 to an ASCII string, written to
+; an 8 byte buffer at a0.
+;
+; INPUTS:
+;   d0: Number to convert to hexadecimal
+;   a0: Output buffer (8 bytes)
+; OUTPUTS:
+;   a0: At end of buffer
+; CLOBBERS:
+;   d0-d2, a0
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+lib_dectohex:
+  moveq   #0, d2
+
+  ; process 8 characters
+  moveq   #7, d1
+
+  ; main character loop
+.Loop:
+  ; get that nybble of the input value
+  rol.l   #4, d0
+  move.l  d0, d2
+  and.b   #$0F, d2
+
+  ; if it's a number, apply one offset
+  cmp.b   #$A, d2
+  bls.s   .Decimal
+
+  ; it's a hex character
+  add.b   #'A'-10, d2
+  bra.s   .WriteChar
+
+.Decimal:
+  add.b   #'0', d2
+
+.WriteChar:
+  ; write to output buffer
+  move.b  d2, (a0)+
+
+  ; check next character too, if needed
+  dbf     d1, .Loop
+
+  rts

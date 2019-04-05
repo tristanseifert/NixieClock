@@ -1,25 +1,36 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Definitions of locations in RAM of variables
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Start all our variables in the last K of RAM
+; Start all our variables in the last 4K of RAM (stack occupies the bottom K)
 RAM_Base_App_Real           = (RAM_Base + $1F000)
+
+; Current mode (byte)
+RAM_Mode                    = RAM_Base_App_Real
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Nixie drivers
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-RAM_Nixie                   = (RAM_Base_App_Real)
-RAM_Nixie_Len               = $40
+RAM_Nixie                   = (RAM_Base_App_Real + $10)
+RAM_Nixie_Len               = $60
 
 ; Blink timer (1 byte)
 RAM_Nixie_Timer             = (RAM_Nixie)
-; Location of driver state: each state is 32 bits.
+; Location of driver state: each state is 64 bits.
 RAM_Nixie_State             = (RAM_Nixie + $10)
 ; Nixie input state: each entry is 16 bits: one byte of BCD digits for the digit
 ; tubes, followed by a byte with bit 1 being the top colon, and 0 the bottom.
-RAM_Nixie_OutState          = (RAM_Nixie + $30)
+RAM_Nixie_OutState          = (RAM_Nixie + $50)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; VFD buffers
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 RAM_VFD                     = (RAM_Nixie + RAM_Nixie_Len)
-RAM_VFD_Len                 = $40
+
+; 24 ($18) bytes per row
+RAM_VFD_Len                 = $60
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Scratch buffers
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+RAM_Scratch                 = (RAM_VFD + RAM_VFD_Len)
+RAM_Scratch_Len             = $40

@@ -12,10 +12,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; table describing app
 AppInfoTable:
-	; app info table version
-	dc.w		$0100
-	; Entry point and initial stack pointer
-	dc.l		EntryPoint, $80000
+	; magic value and app info table version
+	dc.w		420, $0100
+	; start and length of app data (for checksumming; relative to table start)
+	dc.l		(AppStart - AppInfoTable), (AppEnd - AppStart)
+	; checksum (sum of every byte of app data)
+	dc.l		0
+	; Entry point (relative to table start) and initial stack pointer (absolute)
+	dc.l		(EntryPoint - AppInfoTable), $80000
 	; App name (32 bytes)
 	dc.b		"NixieClock                      "
 	; App version
@@ -25,27 +29,103 @@ AppInfoTable:
 	dc.b		$00
 	endr
 
+AppStart:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; App entry point
 EntryPoint:
 	; reset hardware
 	bsr.w		Nixie_Reset
+  bsr.w   VFD_Reset
 
 	; enable interrupts now
 	move		#$2200, sr
 
-	nop
-	bra.s		EntryPoint
+	; print a message
+  lea     App_Init_Text(pc), a0
+  bsr.w   lib_strlen
+
+  swap    d0
+  move.w  #0, d0
+
+	move.l	d0, d1
+  lea     App_Init_Text(pc), a1
+	moveq		#1, d0
+	jsr			Loader_API_Entry
+
+  ; set up mode
+  clr.b   (RAM_Mode)
+
+MainLoop:
+  ; run mode routine
+  moveq   #0, d0
+  move.b  (RAM_Mode), d0
+
+  lsl.w   #2, d0
+  lea     AppModeArray(pc), a0
+  jsr     (a0, d0.w)
+
+	bra.s		MainLoop
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+AppModeArray:
+  dc.l    DisplayTime
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Includes for app modes
+  include "app_time.68k"
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Day-of-week table: index into this table with Loader_DateDayOfWeek to get
+; the location of a zero-terminated string with the name of that day.
+DayOfWeekNames:
+	dc.w		.Sunday-DayOfWeekNames
+	dc.w		.Monday-DayOfWeekNames
+	dc.w		.Tuesday-DayOfWeekNames
+	dc.w		.Wednesday-DayOfWeekNames
+	dc.w		.Thursday-DayOfWeekNames
+	dc.w		.Friday-DayOfWeekNames
+	dc.w		.Saturday-DayOfWeekNames
+
+.Sunday:
+	dc.b    "Sunday", 0
+  even
+.Monday:
+	dc.b    "Monday", 0
+  even
+.Tuesday:
+	dc.b    "Tuesday", 0
+  even
+.Wednesday:
+	dc.b    "Wednesday", 0
+  even
+.Thursday:
+	dc.b    "Thursday", 0
+  even
+.Friday:
+	dc.b    "Friday", 0
+  even
+.Saturday:
+	dc.b    "Saturday", 0
+  even
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Library routines
+	include "lib.68k"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Hardware helper routines
 	include	"nixie.68k"
 	include "vfd.68k"
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+App_Init_Text:
+	dc.b		"Nixie Clock Version 1.0, built on "
+	; no terminating byte, so it's concatenated with build date
+
 ; Metadata
 Info_BuildDate:
 	incbin  "builddate.txt"
 	dc.b    0
 	even
+AppEnd:

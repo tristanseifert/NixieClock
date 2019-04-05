@@ -229,19 +229,55 @@ Loader_RunApp:
   ; disable all interrupts
   move    #$2700, sr
 
-  ; TODO: validate version
+  ; back up base of table
+  move.l  a0, a2
+
+  ; check for magic
   move.w  (a0)+, d0
+  cmp.w   #420, d0
+  bne.s   .InvalidMagic
 
-  ; set up stack and jump to app
-  move.l  4(a0), sp
-  jmp     (a0)
+  ; validate version: anything with the high byte equal to $01 is supported
+  move.w  (a0)+, d0
+  and.w   #$FF00, d0
+  cmp.w   #$0100, d0
+  bne.s   .InvalidVersion
+
+  ; compute checksum
+  move.l  (a0)+, a1
+  move.l  (a0)+, d1
+  moveq   #0, d0
+
+.ChecksumLoop:
+  add.b   (a1)+, d0
+  dbf     d1, .ChecksumLoop
+
+  ; compare it against what's expected
+  cmp.l   (a0)+, d0
+  bne.s   .InvalidChecksum
+
+  ; if we get here, the header is valid, so jump to the app
+  move.l  (a0)+, d0
+  move.l  (a0), sp
+  jmp     (a2, d0.w)
 
 
+
+.InvalidMagic:
+  moveq   #-1, d0
+  rts
+.InvalidVersion:
+  moveq   #-2, d0
+  rts
+.InvalidChecksum:
+  moveq   #-3, d0
+  rts
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Enters the loader main menu.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 Loader_Menu:
+  ; we need interrupts on
   move    #$2200, sr
 
 .MainLoop:

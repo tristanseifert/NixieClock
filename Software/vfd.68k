@@ -18,9 +18,18 @@ VFD_Reset:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Waits for the display to be no longer busy.
+;
+; The VFD's BUSY signal is connected to IP3 on the 68681.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 VFD_WaitBusy:
-  ; TODO: implement
+  ; read the state of the IOs
+  moveq   #4, d0
+  jsr     Loader_API_Entry
+
+  ; is the busy flag asserted?
+  btst    #3, d0
+  bne.s   VFD_WaitBusy
+
   rts
 
 

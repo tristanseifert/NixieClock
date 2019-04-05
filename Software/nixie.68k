@@ -7,11 +7,14 @@
 ;
 ; Hours are at offset 0, minutes at offset 1, and seconds at offset 2.
 ;
-; State is buffered internally, two word for each driver:
-; LLLL RRRR | CC00 0000 | BBBB 0000 | 0000 0000
+; State is buffered internally, 8 bytes for each driver:
+; LLLL RRRR | CC00 BBBB | WWWW XXXX | YYYY ZZZZ
 ; Where LLLL and RRRR are BCD digits for the numerical tubes, CC is the state of
 ; the top and bottom colon. BBBB specifies whether the left or right digits, or
-; the top or bottom colon should be blinking.
+; the top or bottom colon should be blinking. WWWW, XXXX, YYYY, and ZZZZ are
+; unsigned 4-bit integers specifying the brightness of the tubes, e.g. the duty
+; cycle of PWM used to drive their anodes. W is the left tube, X the right, Y
+; the top colon and Z the bottom colon.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; How many 'ticks' elapse between cycling of any blinking digits.
@@ -54,7 +57,32 @@ Nixie_Update:
   move.b  (a0)+, Nixie_Digits(a1)
   move.b  (a0)+, Nixie_Misc(a1)
 
+  ; handle the PWM for the left digit
+  move.b  (a0), d0
+  lsr.b   #4, d0
+  or.b    #$80, d0
+  move.b  d0, Nixie_PWM(a1)
+
+  ; handle the PWM for the right digit
+  move.b  (a0)+, d0
+  and.b   #$0F, d0
+  or.b    #$90, d0
+  move.b  d0, Nixie_PWM(a1)
+
+  ; handle the PWM for the top colon
+  move.b  (a0), d0
+  lsr.b   #4, d0
+  or.b    #$A0, d0
+  move.b  d0, Nixie_PWM(a1)
+
+  ; handle the PWM for the bottom colon
+  move.b  (a0)+, d0
+  and.b   #$0F, d0
+  or.b    #$B0, d0
+  move.b  d0, Nixie_PWM(a1)
+
   ; set up for the next driver
+  addq.l  #4, a0
   addq    #Nixie_Block_Sz, a1
   dbf     d7, .update
 
@@ -86,7 +114,8 @@ Nixie_Timer:
   moveq   #0, d1
 
   ; are any of the blink bits set?
-  move.b  2(a1), d0
+  move.b  1(a1), d0
+  and.b   #$0F, d0
   tst.b   d0
   bne.s   .noBlink
 
@@ -94,8 +123,8 @@ Nixie_Timer:
   move.w  d1, 0(a0)
 
   ; if there are, toggle them
-  eor.b   d0, 3(a1)
-  move.b  3(a1), d0
+  eor.b   d0, 4(a1)
+  move.b  4(a1), d0
 
 
   ;;;;; the section below is repeated for each digit
@@ -180,7 +209,7 @@ Nixie_Timer:
 .next:
   ; check the state for the next set of digits
   addq    #2, a0
-  addq    #4, a1
+  addq    #8, a1
   dbf     d7, .loop
 
 .done:

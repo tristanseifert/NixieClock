@@ -139,7 +139,7 @@ Svc_Delay:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 Svc_ReadIO:
   ; update state from hardware
-  ; bsr.w   MC68681_UpdateInput
+  bsr.w   MC68681_UpdateInput
 
   ; read port state
   move.b  (Loader_68681In), d0
@@ -210,7 +210,7 @@ Svc_ReadRtc:
   ; restore registers
   movem.l (sp)+, d0/d2-d3/a1
   moveq   #0, d0
-  
+
   rts
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -15,7 +15,7 @@ AppInfoTable:
 	; magic value and app info table version
 	dc.w		420, $0100
 	; start and length of app data (for checksumming; relative to table start)
-	dc.l		(AppStart - AppInfoTable), (AppEnd - AppStart)
+	dc.l		(AppStart - AppInfoTable), (AppEnd - AppInfoTable)
 	; checksum (sum of every byte of app data)
 	dc.l		0
 	; Entry point (relative to table start) and initial stack pointer (absolute)

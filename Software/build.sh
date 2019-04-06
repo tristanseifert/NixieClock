@@ -12,6 +12,8 @@ vasmm68k_mot -Fbin -m68008 -o loader.bin -L loader.lst loader.68k
 echo "\n\nAssembling application..."
 vasmm68k_mot -Fbin -m68008 -o app.bin -L app.lst app.68k
 
+./tools/checksum app.bin
+
 # combine them into a rom image
 echo "\n\nCreating ROM image"
 rm -f rom.bin

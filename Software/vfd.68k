@@ -1,5 +1,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Interface for the Noritake CU24043-Y100 24x4 character VFD
+;
+; The !RESET active low is on OP4. BUSY active high is on IP3.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -14,7 +16,41 @@ VFD_Reset:
 .clear:
   move.l  d0, (a0)+
   dbf     d7, .clear
+
+  ; assert reset
+  moveq   #$10, d1
+  moveq   #5, d0
+  jsr     Loader_API_Entry
+
+  ; wait ~10ms
+  move.w  #20000, d0
+.Wait:
+  nop
+  nop
+  dbf     d0, .Wait
+
+  ; de-assert reset
+  moveq   #$10, d1
+  swap    d1
+  moveq   #5, d0
+  jsr     Loader_API_Entry
+
+  ; issue reset command
+  lea     .CmdReset, a0
+  bsr.s   VFD_SendCommand
+
+  ; configure for overwrite mode
+  lea     .CmdOverwrite, a0
+  bsr.s   VFD_SendCommand
+
   rts
+
+.CmdReset:
+  dc.b    3, $1B, $58, $FF
+  even
+.CmdOverwrite:
+  dc.b    2, $1F, $01
+  even
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Waits for the display to be no longer busy.
@@ -32,7 +68,33 @@ VFD_WaitBusy:
 
   rts
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Sends a command to the display. Place in a0 the address of a command string;
+; its first byte is the number of bytes of commands to send, and is followed
+; by the first command byte.
+;
+; If you know the length, write it to d0 and call VFD_SendCommand_WithLength.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+VFD_SendCommand:
+  moveq   #0, d0
 
+  ; get length
+  move.b  (a0)+, d0
+  ; subq.b  #1, d0
+
+VFD_SendCommand_WithLength:
+  lea     VFD_Base, a1
+
+  ; wait for display to not be busy
+  bsr.s   VFD_WaitBusy
+
+  ; write commands to display
+.Write:
+  move.b  (a0)+, (a1)
+  dbf     d0, .Write
+
+  ; done
+  rts
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Periodic update handler, used to flush updates to the display.

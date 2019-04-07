@@ -91,13 +91,21 @@ DisplayTime_UpdateVFD:
   move.b  (Loader_DateDay), d1
   bsr.s   .WriteBCDAsAscii
 
-  ; now, copy that into the VFD buffer
-  lea     (RAM_Scratch), a0
-  lea     (RAM_VFD), a1
+  ; set position to col 1, row 1; then use 1x2 magnification
+  lea     .SetPosCmd, a0
+  bsr.w   VFD_SendCommand
 
-  rept    6
-  move.l  (a0)+, (a1)+
-  endr
+  lea     .MagnifyCmd, a0
+  bsr.w   VFD_SendCommand
+
+  ; now, copy that into the VFD
+  moveq   #24, d0
+  lea     (RAM_Scratch), a0
+  bsr.w   VFD_SendCommand_WithLength
+
+  ; reset to use normal size letters
+  lea     .NormalSizeCmd, a0
+  bsr.w   VFD_SendCommand
 
   rts
 
@@ -114,3 +122,14 @@ DisplayTime_UpdateVFD:
   move.b  d0, (a2)+
 
   rts
+
+
+.SetPosCmd:
+  dc.b  6, $1F, $24, 0, $0, 0, $0
+  even
+.MagnifyCmd:
+  dc.b  6, $1F, $28, $67, $40, 1, 2
+  even
+.NormalSizeCmd:
+  dc.b  6, $1F, $28, $67, $40, 1, 1
+  even

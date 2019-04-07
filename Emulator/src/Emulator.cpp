@@ -10,71 +10,37 @@
 #include <cstdint>
 
 #include <glog/logging.h>
-#include <unicorn/unicorn.h>
 
-/**
- * Trace handler
- */
-void hook_code(uc_engine *uc, uint64_t address, uint32_t size, void *ctx) {
-  uc_err ucErr;
-
-  // get context
-  Emulator *emu = static_cast<Emulator *>(ctx);
-
-  // disassemble the instruction
-  uint8_t instr[16];
-  memset(&instr, 0, sizeof(instr));
-
-  ucErr = uc_mem_read(uc, address, &instr, sizeof(instr));
-  CHECK(ucErr == 0) << "Error reading instruction: " << uc_strerror(ucErr);
-
-  cs_insn *insn;
-  int count = cs_disasm(emu->cs, instr, sizeof(instr), 0, 1, &insn);
-
-  std::stringstream instrStr;
-
-  if(count > 0) {
-    instrStr << insn[0].mnemonic << " " << insn[0].op_str;
-
-    // clean up
-    cs_free(insn, count);
-  }
-
-  // log instruction and registers
-  Emulator::M68kRegs regs;
-  emu->getRegs(regs);
-
-  VLOG(2) << "TRACE: address = $" << std::hex << address << ": " << instrStr.str() << std::endl << regs;
+extern "C" {
+  #include "musashi/m68k.h"
 }
+
+
+static Emulator *gEmulator = nullptr;
+
+
+
+extern "C" void m68k_instruction_hook(void);
+
 
 
 /**
  * Sets up the emulator.
  */
 Emulator::Emulator(std::string romFilePath, std::string nvramFilePath) {
-  cs_err csErr;
-  uc_err ucErr;
+  // ensure we haven't already been allocated
+  CHECK(gEmulator == nullptr) << "Already have an allocated emulator";
+  gEmulator = this;
 
-  // set up disassembly context
-  csErr = cs_open(CS_ARCH_M68K, CS_MODE_M68K_000, &this->cs);
-  CHECK(csErr == CS_ERR_OK) << "Error creating disassembly context: " << cs_strerror(csErr);
-
-  // create CPU context and set up memory regions
-  ucErr = uc_open(UC_ARCH_M68K, UC_MODE_BIG_ENDIAN, &this->uc);
-  CHECK(ucErr == 0) << "Error opening CPU: " << uc_strerror(ucErr);
-
-  ucErr = uc_mem_map_ptr(this->uc, 0x000000, 0x020000, (UC_PROT_READ | UC_PROT_EXEC), this->memRom);
-  CHECK(ucErr == 0) << "Error mapping ROM: " << uc_strerror(ucErr);
-
-  memset(this->memRam, 0x00, sizeof(this->memRam));
-  ucErr = uc_mem_map_ptr(this->uc, 0x060000, 0x020000, UC_PROT_ALL, this->memRam);
-  CHECK(ucErr == 0) << "Error mapping RAM: " << uc_strerror(ucErr);
-
+  // load ROM
   this->loadROM(romFilePath);
 
-  // add hook
-  uc_hook trace;
-  ucErr = uc_hook_add(uc, &trace, UC_HOOK_CODE, (void *) hook_code, this, 1, 0);
+  // set up CPU
+  m68k_init();
+	m68k_set_cpu_type(M68K_CPU_TYPE_68000);
+  m68k_set_instr_hook_callback(m68k_instruction_hook);
+
+  m68k_pulse_reset();
 }
 
 
@@ -82,9 +48,7 @@ Emulator::Emulator(std::string romFilePath, std::string nvramFilePath) {
  * Tears down the emulator.
  */
 Emulator::~Emulator() {
-  // clean up emulator state
-  uc_close(this->uc);
-  cs_close(&this->cs);
+
 }
 
 
@@ -93,8 +57,6 @@ Emulator::~Emulator() {
  * Loads the ROM file from disk.
  */
 void Emulator::loadROM(const std::string path) {
-  uc_err ucErr;
-
   memset(this->memRom, 0xFF, sizeof(this->memRom));
 
   // read file
@@ -111,21 +73,17 @@ void Emulator::loadROM(const std::string path) {
   std::vector<char> rom(size);
   if(romFile.read(rom.data(), size)) {
     // write it into memory now
-    ucErr = uc_mem_write(this->uc, 0x000000, rom.data(), size);
-    CHECK(ucErr == 0) << "Error loading ROM into memory map: " << uc_strerror(ucErr);
+    memcpy(this->memRom, rom.data(), size);
 
     // also, extract stack and PC and set that
-    uint32_t stack = __builtin_bswap32(*((uint32_t *) rom.data()));
+    this->initialSp = __builtin_bswap32(*((uint32_t *) rom.data()));
     this->initialPc = __builtin_bswap32(*((uint32_t *) (rom.data() + 4)));
 
+    // m68k_set_reg(M68K_REG_PC, this->initialPc);
+    // m68k_set_reg(M68K_REG_SP, this->initialSp);
+
     LOG(INFO) << "Initial PC = $" << std::hex << this->initialPc
-              << "; stack = $" << stack << std::endl;
-
-    ucErr = uc_reg_write(this->uc, UC_M68K_REG_A7, &stack);
-    CHECK(ucErr == 0) << "Error setting stack pointer: " << uc_strerror(ucErr);
-
-    ucErr = uc_reg_write(this->uc, UC_M68K_REG_PC, &this->initialPc);
-    CHECK(ucErr == 0) << "Error setting PC: " << uc_strerror(ucErr);
+              << "; stack = $" << this->initialSp << std::endl;
   } else {
     throw std::runtime_error("Couldn't read ROM file to memory");
   }
@@ -146,19 +104,19 @@ void Emulator::loadNVRAM(const std::string path) {
  * Dumps the registers from the CPU.
  */
 void Emulator::getRegs(M68kRegs &regs) {
-  uc_err ucErr;
-
   // dump registers
-  int regIds[18] = {
-    UC_M68K_REG_D0, UC_M68K_REG_D1, UC_M68K_REG_D2, UC_M68K_REG_D3,
-    UC_M68K_REG_D4, UC_M68K_REG_D5, UC_M68K_REG_D6, UC_M68K_REG_D7,
+  const size_t numRegs = 18;
 
-    UC_M68K_REG_A0, UC_M68K_REG_A1, UC_M68K_REG_A2, UC_M68K_REG_A3,
-    UC_M68K_REG_A4, UC_M68K_REG_A5, UC_M68K_REG_A6, UC_M68K_REG_A7,
+  const m68k_register_t regIds[numRegs] = {
+    M68K_REG_D0, M68K_REG_D1, M68K_REG_D2, M68K_REG_D3,
+    M68K_REG_D4, M68K_REG_D5, M68K_REG_D6, M68K_REG_D7,
 
-    UC_M68K_REG_PC, UC_M68K_REG_SR
+    M68K_REG_A0, M68K_REG_A1, M68K_REG_A2, M68K_REG_A3,
+    M68K_REG_A4, M68K_REG_A5, M68K_REG_A6, M68K_REG_A7,
+
+    M68K_REG_PC, M68K_REG_SR
   };
-  void *regVals[18] = {
+  uint32_t *regVals[numRegs] = {
     &regs.d0, &regs.d1, &regs.d2, &regs.d3,
     &regs.d4, &regs.d5, &regs.d6, &regs.d7,
 
@@ -168,9 +126,10 @@ void Emulator::getRegs(M68kRegs &regs) {
     &regs.pc, &regs.sr
   };
 
-  ucErr = uc_reg_read_batch(this->uc, regIds, regVals, 18);
-  // ucErr = uc_reg_read(this->uc, UC_M68K_REG_A0, &regs.a0);
-  CHECK(ucErr == 0) << "Error reading registers: " << uc_strerror(ucErr);
+  for(int i = 0; i < numRegs; i++) {
+    // read reg
+    *regVals[i] = m68k_get_reg(nullptr, regIds[i]);
+  }
 }
 
 
@@ -178,11 +137,9 @@ void Emulator::getRegs(M68kRegs &regs) {
  * Starts emulation.
  */
 void Emulator::start(void) {
-  uc_err ucErr;
-
   while(this->run) {
-    ucErr = uc_emu_start(this->uc, this->initialPc, 0xFFFFFF, 0, 0);
-    CHECK(ucErr == 0) << "Error starting emulation: " << uc_strerror(ucErr);
+    // run weed processor
+    m68k_execute(100000);
   }
 }
 
@@ -195,6 +152,44 @@ void Emulator::stop(void) {
 
 
 
+/**
+ * Instruction executed hook
+ */
+void Emulator::cpuExecutedInstruction(uint64_t address) {
+  // disassemble
+  char instrBuffer[48];
+  memset(&instrBuffer, 0, sizeof(instrBuffer));
+
+  int count = m68k_disassemble(instrBuffer, address, M68K_CPU_TYPE_68000);
+
+  // log instruction and registers
+  Emulator::M68kRegs regs;
+  this->getRegs(regs);
+
+  VLOG(2) << "TRACE: address = $" << std::hex << address << ": " << std::string(instrBuffer) << std::endl << regs;
+}
+
+/**
+ * Memory access hook
+ */
+void Emulator::cpuHookMem(bool read, uint64_t addr, int size, int64_t value) {
+  VLOG(2) << "MEM: " << (read ? "read" : "write") << " at address $" << std::hex << addr << ", size $" << size;
+}
+
+/**
+ * Interrupt hook
+ */
+void Emulator::cpuInt(uint32_t intno) {
+  if(intno == 61) {
+    LOG(ERROR) << "Unsupported exception: " << intno;
+    exit(-1);
+  }
+
+  LOG(INFO) << "Interrupt: " << intno;
+}
+
+
+
 
 /**
  * Outputs a register structure.
@@ -202,7 +197,7 @@ void Emulator::stop(void) {
 std::ostream& operator<<(std::ostream& os, const Emulator::M68kRegs& regs) {
   // set up a temporary stream
   std::stringstream ss;
-  ss << std::setfill('0') << std::right
+  ss << std::setfill('0') << std::right << std::hex
      << "D0: $" << std::setw(8) << regs.d0 << "\t"
      << "D1: $" << std::setw(8) << regs.d1 << std::endl
      << "D2: $" << std::setw(8) << regs.d2 << "\t"
@@ -226,4 +221,161 @@ std::ostream& operator<<(std::ostream& os, const Emulator::M68kRegs& regs) {
   os << ss.str();
 
   return os;
+}
+
+
+
+/**
+ * Returns the address of read/write buffers for fixed memories like ROM and
+ * RAM.
+ */
+void *Get68kBuffer(bool isRead, uint32_t addr) {
+  // limit address to 512K
+  addr &= 0x07FFFF;
+
+  // is this read access?
+  if(isRead) {
+    // ROM
+    if(addr < 0x020000) {
+      return &gEmulator->memRom[addr];
+    }
+    // RAM?
+    else if(addr >= 0x060000 && addr < 0x07FFFF) {
+      return &gEmulator->memRam[(addr - 0x060000)];
+    }
+  }
+  // otherwise, it's a write
+  else {
+    // RAM?
+    if(addr >= 0x060000 && addr < 0x07FFFF) {
+      return &gEmulator->memRam[(addr - 0x060000)];
+    }
+  }
+
+  // no success
+  return nullptr;
+}
+
+/**
+ * Reads from memory
+ */
+extern "C" unsigned int m68k_read_memory_8(unsigned int address) {
+  VLOG(2) << "Read (8 bit) from $" << std::hex << address;
+
+  // handle simple reads
+  void *buf = Get68kBuffer(true, address);
+
+  if(buf) {
+    return *((uint8_t *) buf);
+  }
+
+  // we need to handle it elsehow
+  LOG(WARNING) << "Unhandled 8-bit read from $" << std::hex << address;
+  return 0;
+}
+
+extern "C" unsigned int m68k_read_memory_16(unsigned int address) {
+  VLOG(2) << "Read (16 bit) from $" << std::hex << address;
+
+  // handle simple reads
+  void *buf = Get68kBuffer(true, address);
+
+  if(buf) {
+    return __builtin_bswap16(*((uint16_t *) buf));
+  }
+
+  // we need to handle it elsehow
+  LOG(WARNING) << "Unhandled 16-bit read from $" << std::hex << address;
+  return 0;
+}
+
+extern "C" unsigned int m68k_read_memory_32(unsigned int address) {
+  VLOG(2) << "Read (32 bit) from $" << std::hex << address;
+
+  // handle simple reads
+  void *buf = Get68kBuffer(true, address);
+
+  if(buf) {
+    return __builtin_bswap32(*((uint32_t *) buf));
+  }
+
+  // we need to handle it elsehow
+  LOG(WARNING) << "Unhandled 32-bit read from $" << std::hex << address;
+  return 0;
+}
+
+extern "C" uint32_t m68k_read_disassembler_16(uint32_t addr) {
+  return m68k_read_memory_16(addr);
+}
+
+extern "C" uint32_t m68k_read_disassembler_32(uint32_t addr) {
+  return m68k_read_memory_32(addr);
+}
+
+/**
+ * Writes to memory
+ */
+extern "C" void m68k_write_memory_8(unsigned int address, unsigned int value) {
+  VLOG(2) << "Write (8 bit) to $" << std::hex << address << " = $" << value;
+
+  // handle simple writes
+  void *buf = Get68kBuffer(false, address);
+
+  if(buf) {
+    *((uint8_t *) buf) = (value & 0xFF);
+    return;
+  }
+
+  // yikes
+  LOG(WARNING) << "Unhandled 8-bit write to $" << std::hex << address;
+}
+
+extern "C" void m68k_write_memory_16(unsigned int address, unsigned int value) {
+  VLOG(2) << "Write (16 bit) to $" << std::hex << address << " = $" << value;
+
+  // handle simple writes
+  void *buf = Get68kBuffer(false, address);
+
+  if(buf) {
+    *((uint16_t *) buf) = __builtin_bswap16(value & 0xFFFF);
+    return;
+  }
+
+  // yikes
+  LOG(WARNING) << "Unhandled 16-bit write to $" << std::hex << address;
+}
+
+extern "C" void m68k_write_memory_32(unsigned int address, unsigned int value) {
+  VLOG(2) << "Write (32 bit) to $" << std::hex << address << " = $" << value;
+
+  // handle simple writes
+  void *buf = Get68kBuffer(false, address);
+
+  if(buf) {
+    *((uint32_t *) buf) = __builtin_bswap32(value & 0xFFFFFFFF);
+    return;
+  }
+
+  // yikes
+  LOG(WARNING) << "Unhandled 32-bit write to $" << std::hex << address;
+}
+
+/**
+ * Called when RESET is invoked
+ */
+extern "C" void m68k_reset_called(void) {
+  LOG(INFO) << "RESET instruction called!";
+}
+
+/**
+ * Called before each instruction
+ */
+extern "C" void m68k_instruction_hook(void) {
+  // get PC
+  uint32_t pc = 0;
+
+  pc = m68k_get_reg(nullptr, M68K_REG_PC);
+
+  // run callback
+  gEmulator->cpuExecutedInstruction(pc);
 }

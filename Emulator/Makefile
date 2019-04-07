@@ -18,7 +18,7 @@ OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)
 
 # libraries to link against
-LIBS := stdc++ glog unicorn capstone
+LIBS := stdc++ glog
 LIBS_DIRS += libs
 
 
@@ -38,7 +38,7 @@ INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 
 # flags for the C and C++ compiler
 CPPFLAGS ?= -g $(INC_FLAGS) -MMD -MP -std=c++1z -fno-strict-aliasing
-CFLAGS ?= -g -fno-strict-aliasing
+CFLAGS ?= -g -fno-strict-aliasing -fsanitize=address,undefined
 
 # flags for the linker
 LDFLAGS ?= -g $(LIBS_FLAGS)
@@ -53,8 +53,8 @@ ifeq ($(BUILD),RELEASE)
 	CFLAGS += -O2
 	CPPFLAGS += -O2
 else
-	CFLAGS += -Og -DDEBUG="1"
-	CPPFLAGS += -Og -DDEBUG="1"
+	CFLAGS += -DDEBUG="1"
+	CPPFLAGS += -DDEBUG="1"
 endif
 
 # all target

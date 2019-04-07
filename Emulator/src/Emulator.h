@@ -6,9 +6,6 @@
 #include <cstdint>
 #include <iostream>
 
-#include <unicorn/unicorn.h>
-#include <capstone/capstone.h>
-
 class Emulator {
   public:
     class M68kRegs {
@@ -38,18 +35,23 @@ class Emulator {
     void loadROM(const std::string path);
     void loadNVRAM(const std::string path);
 
-  private:
-    uc_engine *uc = nullptr;
-    csh cs;
+  public:
+    void cpuExecutedInstruction(uint64_t address);
+    void cpuHookMem(bool read, uint64_t addr, int size, int64_t value);
+    void cpuInt(uint32_t intno);
 
-    uint32_t initialPc = 0;
+  private:
+    uint32_t initialPc = 0, initialSp = 0;
 
     std::atomic_bool run = true;
 
     uint8_t memRom[0x20000];
     uint8_t memRam[0x20000];
 
-  friend void hook_code(uc_engine *uc, uint64_t address, uint32_t size, void *ctx);
+    uint8_t nvram[0x8000];
+
+  private:
+    friend void *Get68kBuffer(bool, uint32_t);
 };
 
 #endif

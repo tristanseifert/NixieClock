@@ -36,12 +36,15 @@ endif
 LIBS_FLAGS := $(addprefix -L,$(LIBS_DIRS)) $(addprefix -l,$(LIBS))
 INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 
+# sanitization flags
+SANITIZE ?= -fsanitize=address,undefined
+
 # flags for the C and C++ compiler
 CPPFLAGS ?= -g $(INC_FLAGS) -MMD -MP -std=c++1z -fno-strict-aliasing
-CFLAGS ?= -g -fno-strict-aliasing -fsanitize=address,undefined
+CFLAGS ?= -g -fno-strict-aliasing $(SANITIZE)
 
 # flags for the linker
-LDFLAGS ?= -g $(LIBS_FLAGS)
+LDFLAGS ?= -g $(LIBS_FLAGS) $(SANITIZE)
 
 # git version
 GIT_HASH=`git rev-parse HEAD`

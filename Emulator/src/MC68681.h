@@ -21,6 +21,9 @@ class MC68681 : public BusPeripheral {
 
   private:
     int uart1Sock = 0, uart2Sock = 0;
+
+    uint16_t timerPeriod = 0;
+    uint8_t irqVector = 0;
 };
 
 #endif

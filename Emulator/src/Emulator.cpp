@@ -1,5 +1,7 @@
 #include "Emulator.h"
 
+#include "MC68681.h"
+
 #include <string>
 #include <vector>
 #include <sstream>
@@ -14,6 +16,12 @@
 extern "C" {
   #include "musashi/m68k.h"
 }
+
+/// Should all instructions be logged?
+#define LOG_INSTRUCTIONS        0
+/// should we log memory accesses?
+#define LOG_MEM_READ            0
+#define LOG_MEM_WRITE           0
 
 
 static Emulator *gEmulator = nullptr;
@@ -32,6 +40,9 @@ Emulator::Emulator(std::string romFilePath, std::string nvramFilePath) {
   CHECK(gEmulator == nullptr) << "Already have an allocated emulator";
   gEmulator = this;
 
+  // initialize peripherals
+  this->duart = new MC68681(this);
+
   // load ROM
   this->loadROM(romFilePath);
 
@@ -48,7 +59,11 @@ Emulator::Emulator(std::string romFilePath, std::string nvramFilePath) {
  * Tears down the emulator.
  */
 Emulator::~Emulator() {
-
+  // clean up peripherals
+  if(this->duart) {
+    delete this->duart;
+    this->duart = nullptr;
+  }
 }
 
 
@@ -156,6 +171,7 @@ void Emulator::stop(void) {
  * Instruction executed hook
  */
 void Emulator::cpuExecutedInstruction(uint64_t address) {
+#if LOG_INSTRUCTIONS
   // disassemble
   char instrBuffer[48];
   memset(&instrBuffer, 0, sizeof(instrBuffer));
@@ -167,6 +183,7 @@ void Emulator::cpuExecutedInstruction(uint64_t address) {
   this->getRegs(regs);
 
   VLOG(2) << "TRACE: address = $" << std::hex << address << ": " << std::string(instrBuffer) << std::endl << regs;
+#endif
 }
 
 /**
@@ -257,10 +274,80 @@ void *Get68kBuffer(bool isRead, uint32_t addr) {
 }
 
 /**
+ * Handles peripheral accesses.
+ *
+ * For reads, *data will deposit data in an uint32_t; for writes, it is read for
+ * the data to write.
+ *
+ * Return negative number to abort memory access.
+ */
+int Handle68kPeriph(bool isRead, uint8_t width, uint32_t address, uint32_t *data) {
+  try {
+    // is this a read?
+    if(isRead) {
+      // DUART
+      if(address >= 0x020000 && address <= 0x02FFFF) {
+        if(width == 8) {
+          *data = gEmulator->duart->busRead((address - 0x020000), BusPeripheral::kBusSize8Bits);
+          return 0;
+        } else {
+          LOG(ERROR) << "Invalid read bus width for DUART: " << width;
+        }
+      }
+    } else {
+      // DUART
+      if(address >= 0x020000 && address <= 0x02FFFF) {
+        if(width == 8) {
+          gEmulator->duart->busWrite((address - 0x020000), *data, BusPeripheral::kBusSize8Bits);
+          return 0;
+        } else {
+          LOG(ERROR) << "Invalid write bus width for DUART: " << width;
+        }
+      }
+    }
+  } catch(BusPeripheral::BusError e) {
+    LOG(ERROR) << "Bus error accessing peripheral at $" << std::hex << address
+               << " for " << (isRead ? "read" : "write") << ": " << e.what();
+  }
+
+  // unhandled
+  return -1;
+}
+
+/**
+ * Determines what to do for an unhandled bus transaction.
+ */
+void Unhandled68kTransaction(bool isRead, uint32_t address, uint32_t data, int width) {
+  std::stringstream message;
+
+  if(isRead) {
+    message << "Unhandled " << width << "-bit read from $" << std::hex
+            << address << std::endl;
+  } else {
+    message << "Unhandled " << width << "-bit write to $" << std::hex
+            << address << " = $" << data << std::endl;
+  }
+
+  // dump state
+  Emulator::M68kRegs regs;
+  gEmulator->getRegs(regs);
+
+  message << regs;
+
+  // print message
+  LOG(WARNING) << message.str();
+
+  // infinite loop
+  while(1) {}
+}
+
+/**
  * Reads from memory
  */
 extern "C" unsigned int m68k_read_memory_8(unsigned int address) {
+#if LOG_MEM_READ
   VLOG(2) << "Read (8 bit) from $" << std::hex << address;
+#endif
 
   // handle simple reads
   void *buf = Get68kBuffer(true, address);
@@ -269,13 +356,22 @@ extern "C" unsigned int m68k_read_memory_8(unsigned int address) {
     return *((uint8_t *) buf);
   }
 
+  // handle peripherals
+  uint32_t tmp;
+
+  if(Handle68kPeriph(true, 8, address, &tmp) >= 0) {
+    return tmp;
+  }
+
   // we need to handle it elsehow
-  LOG(WARNING) << "Unhandled 8-bit read from $" << std::hex << address;
+  Unhandled68kTransaction(true, address, 0, 8);
   return 0;
 }
 
 extern "C" unsigned int m68k_read_memory_16(unsigned int address) {
+#if LOG_MEM_READ
   VLOG(2) << "Read (16 bit) from $" << std::hex << address;
+#endif
 
   // handle simple reads
   void *buf = Get68kBuffer(true, address);
@@ -284,13 +380,22 @@ extern "C" unsigned int m68k_read_memory_16(unsigned int address) {
     return __builtin_bswap16(*((uint16_t *) buf));
   }
 
+  // handle peripherals
+  uint32_t tmp;
+
+  if(Handle68kPeriph(true, 16, address, &tmp) >= 0) {
+    return __builtin_bswap16(tmp);
+  }
+
   // we need to handle it elsehow
-  LOG(WARNING) << "Unhandled 16-bit read from $" << std::hex << address;
+  Unhandled68kTransaction(true, address, 0, 16);
   return 0;
 }
 
 extern "C" unsigned int m68k_read_memory_32(unsigned int address) {
+#if LOG_MEM_READ
   VLOG(2) << "Read (32 bit) from $" << std::hex << address;
+#endif
 
   // handle simple reads
   void *buf = Get68kBuffer(true, address);
@@ -299,8 +404,15 @@ extern "C" unsigned int m68k_read_memory_32(unsigned int address) {
     return __builtin_bswap32(*((uint32_t *) buf));
   }
 
+  // handle peripherals
+  uint32_t tmp;
+
+  if(Handle68kPeriph(true, 32, address, &tmp) >= 0) {
+    return __builtin_bswap32(tmp);
+  }
+
   // we need to handle it elsehow
-  LOG(WARNING) << "Unhandled 32-bit read from $" << std::hex << address;
+  Unhandled68kTransaction(true, address, 0, 32);
   return 0;
 }
 
@@ -315,49 +427,76 @@ extern "C" uint32_t m68k_read_disassembler_32(uint32_t addr) {
 /**
  * Writes to memory
  */
-extern "C" void m68k_write_memory_8(unsigned int address, unsigned int value) {
+extern "C" void m68k_write_memory_8(unsigned int address, unsigned int _value) {
+  uint32_t value = (_value & 0xFF);
+
+#if LOG_MEM_WRITE
   VLOG(2) << "Write (8 bit) to $" << std::hex << address << " = $" << value;
+#endif
 
   // handle simple writes
   void *buf = Get68kBuffer(false, address);
 
   if(buf) {
-    *((uint8_t *) buf) = (value & 0xFF);
+    *((uint8_t *) buf) = value;
+    return;
+  }
+
+  // handle peripherals
+  if(Handle68kPeriph(false, 8, address, &value) >= 0) {
     return;
   }
 
   // yikes
-  LOG(WARNING) << "Unhandled 8-bit write to $" << std::hex << address;
+  Unhandled68kTransaction(false, address, value, 8);
 }
 
-extern "C" void m68k_write_memory_16(unsigned int address, unsigned int value) {
+extern "C" void m68k_write_memory_16(unsigned int address, unsigned int _value) {
+  uint32_t value = __builtin_bswap16(_value & 0xFFFF);
+
+#if LOG_MEM_WRITE
   VLOG(2) << "Write (16 bit) to $" << std::hex << address << " = $" << value;
+#endif
 
   // handle simple writes
   void *buf = Get68kBuffer(false, address);
 
   if(buf) {
-    *((uint16_t *) buf) = __builtin_bswap16(value & 0xFFFF);
+    *((uint16_t *) buf) = value;
+    return;
+  }
+
+  // handle peripherals
+  if(Handle68kPeriph(false, 16, address, &value) >= 0) {
     return;
   }
 
   // yikes
-  LOG(WARNING) << "Unhandled 16-bit write to $" << std::hex << address;
+  Unhandled68kTransaction(false, address, value, 16);
 }
 
-extern "C" void m68k_write_memory_32(unsigned int address, unsigned int value) {
+extern "C" void m68k_write_memory_32(unsigned int address, unsigned int _value) {
+  uint32_t value = __builtin_bswap32(_value & 0xFFFFFFFF);
+
+#if LOG_MEM_WRITE
   VLOG(2) << "Write (32 bit) to $" << std::hex << address << " = $" << value;
+#endif
 
   // handle simple writes
   void *buf = Get68kBuffer(false, address);
 
   if(buf) {
-    *((uint32_t *) buf) = __builtin_bswap32(value & 0xFFFFFFFF);
+    *((uint32_t *) buf) = value;
+    return;
+  }
+
+  // handle peripherals
+  if(Handle68kPeriph(false, 32, address, &value) >= 0) {
     return;
   }
 
   // yikes
-  LOG(WARNING) << "Unhandled 32-bit write to $" << std::hex << address;
+  Unhandled68kTransaction(false, address, value, 32);
 }
 
 /**

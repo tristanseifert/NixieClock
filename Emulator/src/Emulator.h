@@ -6,6 +6,8 @@
 #include <cstdint>
 #include <iostream>
 
+class MC68681;
+
 class Emulator {
   public:
     class M68kRegs {
@@ -45,6 +47,8 @@ class Emulator {
 
     std::atomic_bool run = true;
 
+    MC68681 *duart = nullptr;
+
     uint8_t memRom[0x20000];
     uint8_t memRam[0x20000];
 
@@ -52,6 +56,8 @@ class Emulator {
 
   private:
     friend void *Get68kBuffer(bool, uint32_t);
+    friend int Handle68kPeriph(bool, uint8_t, uint32_t, uint32_t *);
+    friend void Unhandled68kTransaction(bool, uint32_t, uint32_t, int);
 };
 
 #endif

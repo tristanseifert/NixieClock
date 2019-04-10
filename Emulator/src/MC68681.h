@@ -8,7 +8,10 @@
 #include "BusPeripheral.h"
 
 #include <cstdint>
-#include <vector>
+#include <queue>
+#include <mutex>
+#include <thread>
+#include <atomic>
 
 class Emulator;
 
@@ -18,6 +21,10 @@ class MC68681 : public BusPeripheral {
       kChannelA = 0,
       kChannelB = 1
     } ChannelType;
+
+  private:
+    static const unsigned int uartAPort = 4200;
+    static const unsigned int uartBPort = 4201;
 
   public:
     MC68681(Emulator *emulator);
@@ -30,6 +37,7 @@ class MC68681 : public BusPeripheral {
     void modeRegWrite(ChannelType type, uint8_t data);
     void clockSelWrite(ChannelType type, uint8_t data);
     void commandWrite(ChannelType type, uint8_t data);
+    uint8_t statusRead(ChannelType type);
 
     void uartWrite(ChannelType type, uint8_t write);
     uint8_t uartRead(ChannelType type);
@@ -37,19 +45,30 @@ class MC68681 : public BusPeripheral {
     void startTimer(void);
     void stopTimer(void);
 
+    void openSocket(ChannelType channel, unsigned int port);
+    void readerThread(ChannelType channel);
+
   private:
+    std::atomic_bool run = true;
+
     uint16_t timerPeriod = 0;
     uint8_t irqVector = 0;
 
     class {
       public:
-        // telnet sockets
+        // listening socket
+        int listenSocket = 0;
+        // connection to client
         int socket = 0;
+
+        // thread to read from socket
+        std::thread *readerThread = nullptr;
 
         // are the receiver/transmitter on?
         bool txOn = false, rxOn = false;
         // receive and transmit FIFOs
-        std::vector<uint8_t> rxFifo, txFifo;
+        std::queue<uint8_t> rxFifo, txFifo;
+        std::mutex rxFifoLock, txFifoLock;
 
         // error flags
         bool breakRx = false, parityErr = false, framingErr = false,
@@ -64,6 +83,8 @@ class MC68681 : public BusPeripheral {
         // mode register pointer and data
         int modeRegPtr = 0;
     } channelState[2];
+
+    friend void MC68681_ReaderThreadEntry(void *ctx, ChannelType channel);
 };
 
 #endif

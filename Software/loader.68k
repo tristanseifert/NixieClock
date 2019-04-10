@@ -302,6 +302,9 @@ Loader_Menu:
   bra.s   .MainLoop
 
 .CheckResponse:
+  ; we need to get the character into the low word again
+  swap    d0
+
   ; start ROM app?
   cmp.b   #'1', d0
   bne.s   .CheckRAMApp
@@ -392,14 +395,21 @@ Loader_Menu_PrintError:
 
   ; now, get the error code and print it in hex
   move.l  (sp)+, d0
-  lea     -8(sp), a0
+  lea     (Loader_Uart_Rx_Buffer), a0
   bsr.w   lib_dectohex
 
   moveq   #8, d0
   swap    d0
-  lea     -8(sp), a0
-  ; bsr.w   MC68681_UartTx
+  lea     (Loader_Uart_Rx_Buffer), a0
+  bsr.w   MC68681_UartTx
+  ; bra.w   MC68681_UartTx
+
+  ; also, a newline
+  moveq   #2, d0
+  swap    d0
+  lea     .Newline(pc), a0
   bra.w   MC68681_UartTx
+  ; bsr.w   MC68681_UartTx
 
   ; done!
 .Done:
@@ -408,20 +418,23 @@ Loader_Menu_PrintError:
 .Colon:
   dc.b    ": ", 0
   even
+.Newline:
+  dc.b    " ", $0A, 0
+  even
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 Loader_Menu_Text:
-  dc.b    "Loader Menu\n"
-  dc.b    "Select an option\n"
-  dc.b    "1) Start ROM app from $008000\n"
-  dc.b    "2) Start RAM app from $070000\n"
-  dc.b    "3) Download to RAM\n"
-  dc.b    "4) Enter monitor\n"
+  dc.b    "Loader Menu", $0A
+  dc.b    "Select an option", $0A
+  dc.b    "1) Start ROM app from $008000", $0A
+  dc.b    "2) Start RAM app from $070000", $0A
+  dc.b    "3) Download to RAM", $0A
+  dc.b    "4) Enter monitor", $0A
   dc.b    "> ", 0
   even
 
 Loader_Menu_Invalid:
-  dc.b    "Invalid selection\n", 0
+  dc.b    "Invalid selection", $0A, 0
   even
 
 Loader_Menu_ErrRunApp:

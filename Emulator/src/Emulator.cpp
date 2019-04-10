@@ -29,6 +29,7 @@ static Emulator *gEmulator = nullptr;
 
 
 extern "C" void m68k_instruction_hook(void);
+extern "C" void m68k_reset_called(void);
 
 
 
@@ -50,6 +51,7 @@ Emulator::Emulator(std::string romFilePath, std::string nvramFilePath) {
   m68k_init();
 	m68k_set_cpu_type(M68K_CPU_TYPE_68000);
   m68k_set_instr_hook_callback(m68k_instruction_hook);
+  m68k_set_reset_instr_callback(m68k_reset_called);
 
   m68k_pulse_reset();
 }
@@ -504,6 +506,31 @@ extern "C" void m68k_write_memory_32(unsigned int address, unsigned int _value) 
  */
 extern "C" void m68k_reset_called(void) {
   LOG(INFO) << "RESET instruction called!";
+
+  // print state
+  std::stringstream message;
+
+  // disassemble current address
+  uint64_t address = m68k_get_reg(nullptr, M68K_REG_PC);
+
+  char instrBuffer[48];
+  memset(&instrBuffer, 0, sizeof(instrBuffer));
+
+  int count = m68k_disassemble(instrBuffer, address, M68K_CPU_TYPE_68000);
+
+  message << "Error at $" << std::hex << address << ": " << std::string(instrBuffer) << std::endl;
+
+  // dump registers
+  Emulator::M68kRegs regs;
+  gEmulator->getRegs(regs);
+
+  message << regs;
+
+  // print message
+  LOG(WARNING) << message.str();
+
+  // loop forever
+  while(1) {}
 }
 
 /**

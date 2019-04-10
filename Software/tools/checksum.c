@@ -65,9 +65,9 @@ int main(int argc, char const *argv[]) {
     return -1;
   }
 
-  // get the start and end offsets (they are big endian)
+  // get the start and size (they are big endian)
   uint32_t startOff = __builtin_bswap32(*((uint32_t *) &blob[4]));
-  uint32_t endOff = __builtin_bswap32(*((uint32_t *) &blob[8]));
+  uint32_t endOff = startOff + __builtin_bswap32(*((uint32_t *) &blob[8]));
 
   printf("Computing checksum over bytes %u to %u\n", startOff, endOff);
 

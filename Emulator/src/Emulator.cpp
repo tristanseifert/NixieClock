@@ -1,6 +1,7 @@
 #include "Emulator.h"
 
 #include "MC68681.h"
+#include "TubeDrivers.h"
 
 #include <string>
 #include <vector>
@@ -43,6 +44,7 @@ Emulator::Emulator(std::string romFilePath, std::string nvramFilePath) {
 
   // initialize peripherals
   this->duart = new MC68681(this);
+  this->tubes = new TubeDrivers(this);
 
   // load ROM
   this->loadROM(romFilePath);
@@ -65,6 +67,11 @@ Emulator::~Emulator() {
   if(this->duart) {
     delete this->duart;
     this->duart = nullptr;
+  }
+
+  if(this->tubes) {
+    delete this->tubes;
+    this->tubes = nullptr;
   }
 }
 
@@ -284,27 +291,43 @@ void *Get68kBuffer(bool isRead, uint32_t addr) {
  * Return negative number to abort memory access.
  */
 int Handle68kPeriph(bool isRead, uint8_t width, uint32_t address, uint32_t *data) {
+  // get width
+  BusPeripheral::bus_size_t size;
+
+  switch(width) {
+    case 8:
+      size = BusPeripheral::kBusSize8Bits;
+      break;
+    case 16:
+      size = BusPeripheral::kBusSize16Bits;
+      break;
+    case 32:
+      size = BusPeripheral::kBusSize32Bits;
+      break;
+
+    // should never get here
+    default:
+      LOG(FATAL) << "Invalid bus widthL " << width;
+  }
+
   try {
     // is this a read?
     if(isRead) {
       // DUART
       if(address >= 0x020000 && address <= 0x02FFFF) {
-        if(width == 8) {
-          *data = gEmulator->duart->busRead((address - 0x020000), BusPeripheral::kBusSize8Bits);
-          return 0;
-        } else {
-          LOG(ERROR) << "Invalid read bus width for DUART: " << width;
-        }
+        *data = gEmulator->duart->busRead((address - 0x020000), size);
+        return 0;
       }
     } else {
       // DUART
       if(address >= 0x020000 && address <= 0x02FFFF) {
-        if(width == 8) {
-          gEmulator->duart->busWrite((address - 0x020000), *data, BusPeripheral::kBusSize8Bits);
-          return 0;
-        } else {
-          LOG(ERROR) << "Invalid write bus width for DUART: " << width;
-        }
+        gEmulator->duart->busWrite((address - 0x020000), *data, size);
+        return 0;
+      }
+      // tube drivers
+      else if(address >= 0x040000 && address <= 0x04FFFF) {
+        gEmulator->tubes->busWrite((address - 0x040000), *data, size);
+        return 0;
       }
     }
   } catch(BusPeripheral::BusError e) {

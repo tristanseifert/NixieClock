@@ -248,7 +248,7 @@ Loader_RunApp:
   add.l   a2, a1
   move.l  (a0)+, d1
   subq.l  #1, d1
-  
+
   moveq   #0, d0
   moveq   #0, d2
 
@@ -513,6 +513,9 @@ Svc_Entry:
   ; back up d1, a0
   movem.l d1/a0, -(sp)
 
+  ; multiply d0 first: table is word wide
+  add.w   d0, d0
+
   ; check that the request is in bounds
   moveq   #(Svc_Table_End-Svc_Table), d1
   cmp.b   d0, d1
@@ -527,6 +530,7 @@ Svc_Entry:
 
 .Cleanup:
   movem.l (sp)+, d1/a0
+  rts
 
 .Invalid:
   ; set error code

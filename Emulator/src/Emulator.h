@@ -7,6 +7,7 @@
 #include <iostream>
 
 class MC68681;
+class TubeDrivers;
 
 class Emulator {
   public:
@@ -48,6 +49,7 @@ class Emulator {
     std::atomic_bool run = true;
 
     MC68681 *duart = nullptr;
+    TubeDrivers *tubes = nullptr;
 
     uint8_t memRom[0x20000];
     uint8_t memRam[0x20000];

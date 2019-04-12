@@ -8,6 +8,8 @@
 
 class MC68681;
 class TubeDrivers;
+class VFD;
+class DS1244;
 
 class Emulator {
   public:
@@ -50,6 +52,8 @@ class Emulator {
 
     MC68681 *duart = nullptr;
     TubeDrivers *tubes = nullptr;
+    VFD *vfd = nullptr;
+    DS1244 *rtc = nullptr;
 
     uint8_t memRom[0x20000];
     uint8_t memRam[0x20000];

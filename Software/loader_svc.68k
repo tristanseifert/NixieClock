@@ -34,13 +34,14 @@ Svc_UartOut:
   move.l  d2, -(sp)
 
   ; is the UART number in range?
-  cmp.w   #2, d0
-  bhs.s   .Invalid
+  cmp.w   #2, d1
+  bge.s   .UartNumOutOfRange
 
   ; length should be nonzero
-  swap    d0
-  tst.w   d0
-  beq.s   .Invalid
+  swap    d1
+  tst.w   d1
+  beq.s   .InvalidLength
+  swap    d1
 
   ; write to the appropriate UART
   move.l  a1, a0
@@ -53,7 +54,10 @@ Svc_UartOut:
 
   rts
 
-.Invalid:
+.UartNumOutOfRange:
+  moveq   #-2, d0
+  bra.s   .Done
+.InvalidLength:
   moveq   #-1, d0
   bra.s   .Done
 
@@ -73,18 +77,19 @@ Svc_UartIn:
   movem.l  d2-d3, -(sp)
 
   ; is the UART number in range?
-  cmp.w   #2, d0
-  bhs.s   .Invalid
+  cmp.w   #2, d1
+  bge.s   .UartNumOutOfRange
 
   ; length should be nonzero
-  swap    d0
-  tst.w   d0
-  beq.s   .Invalid
+  swap    d1
+  tst.w   d1
+  beq.s   .InvalidLength
+  swap    d1
 
   ; read from the appropriate UART
   move.l  a1, a0
   move.l  d1, d0
-  bsr.w   MC68681_UartTx
+  bsr.w   MC68681_UartRx
 
   ; reformat return code d0
   swap    d0
@@ -109,7 +114,10 @@ Svc_UartIn:
   movem.l  (sp)+, d2-d3
   rts
 
-.Invalid:
+.UartNumOutOfRange:
+  moveq   #-2, d0
+  bra.s   .Done
+.InvalidLength:
   moveq   #-1, d0
   bra.s   .Done
 

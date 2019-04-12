@@ -128,4 +128,7 @@ Info_BuildDate:
 	incbin  "builddate.txt"
 	dc.b    0
 	even
+
+; end of app
+  even
 AppEnd:

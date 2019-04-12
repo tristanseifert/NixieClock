@@ -231,6 +231,8 @@ uint32_t MC68681::busRead(uint32_t addr, bus_size_t size) {
 
     // input port data
     case 0x0D:
+      // just have VFD BUSY low all the time
+      outData = 0;
       break;
 
     // start timer/counter

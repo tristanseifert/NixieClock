@@ -2,6 +2,8 @@
 
 #include "MC68681.h"
 #include "TubeDrivers.h"
+#include "VFD.h"
+#include "DS1244.h"
 
 #include <string>
 #include <vector>
@@ -45,6 +47,8 @@ Emulator::Emulator(std::string romFilePath, std::string nvramFilePath) {
   // initialize peripherals
   this->duart = new MC68681(this);
   this->tubes = new TubeDrivers(this);
+  this->vfd = new VFD(this);
+  this->rtc = new DS1244(this, this->nvram);
 
   // load ROM
   this->loadROM(romFilePath);
@@ -72,6 +76,16 @@ Emulator::~Emulator() {
   if(this->tubes) {
     delete this->tubes;
     this->tubes = nullptr;
+  }
+
+  if(this->vfd) {
+    delete this->vfd;
+    this->vfd = nullptr;
+  }
+
+  if(this->rtc) {
+    delete this->rtc;
+    this->rtc = nullptr;
   }
 }
 
@@ -293,6 +307,8 @@ void *Get68kBuffer(bool isRead, uint32_t addr) {
 int Handle68kPeriph(bool isRead, uint8_t width, uint32_t address, uint32_t *data) {
   // get width
   BusPeripheral::bus_size_t size;
+  BusPeripheral *periph = nullptr;
+  uint32_t offset;
 
   switch(width) {
     case 8:
@@ -310,33 +326,49 @@ int Handle68kPeriph(bool isRead, uint8_t width, uint32_t address, uint32_t *data
       LOG(FATAL) << "Invalid bus widthL " << width;
   }
 
+  // DUART
+  if(address >= 0x020000 && address <= 0x02FFFF) {
+    offset = (address - 0x020000);
+    periph = gEmulator->duart;
+  }
+  // tube drivers
+  else if(address >= 0x040000 && address <= 0x04FFFF) {
+    offset = (address - 0x040000);
+    periph = gEmulator->tubes;
+  }
+  // VFD
+  else if(address >= 0x050000 && address <= 0x05FFFF) {
+    offset = (address - 0x050000);
+    periph = gEmulator->vfd;
+  }
+  // RTC
+  else if(address >= 0x030000 && address <= 0x03FFFF) {
+    offset = (address - 0x030000);
+    periph = gEmulator->rtc;
+  }
+
+  // if no peripheral found, abort
+  if(!periph) {
+    return -1;
+  }
+
+  // attempt bus operation
   try {
-    // is this a read?
+    // handle reads
     if(isRead) {
-      // DUART
-      if(address >= 0x020000 && address <= 0x02FFFF) {
-        *data = gEmulator->duart->busRead((address - 0x020000), size);
-        return 0;
-      }
-    } else {
-      // DUART
-      if(address >= 0x020000 && address <= 0x02FFFF) {
-        gEmulator->duart->busWrite((address - 0x020000), *data, size);
-        return 0;
-      }
-      // tube drivers
-      else if(address >= 0x040000 && address <= 0x04FFFF) {
-        gEmulator->tubes->busWrite((address - 0x040000), *data, size);
-        return 0;
-      }
+      *data = periph->busRead(offset, size);
+    }
+    // it's a write
+    else {
+      periph->busWrite(offset, *data, size);
     }
   } catch(BusPeripheral::BusError e) {
     LOG(ERROR) << "Bus error accessing peripheral at $" << std::hex << address
                << " for " << (isRead ? "read" : "write") << ": " << e.what();
   }
 
-  // unhandled
-  return -1;
+  // success
+  return 0;
 }
 
 /**

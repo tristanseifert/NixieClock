@@ -148,12 +148,14 @@ RTC_WriteMagic:
   lea     (RTC_Time_Reg), a0
   lea     RTC_MagicSeq(pc), a1
 
+  moveq   #0, d1
   moveq   #63, d0
 
 .WriteLoop:
   ; is this the start of a byte?
   move.b  d0, d2
   and.b   #$7, d2
+  cmp.b   #$7, d2
   bne.s   .notStart
 
   ; if so, read the byte

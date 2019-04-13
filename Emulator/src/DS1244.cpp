@@ -38,9 +38,37 @@ void DS1244::busWrite(uint32_t addr, uint32_t data, bus_size_t size) {
   // write into NVRAM
   this->nvram[addr] = data;
 
-  // TODO: pattern recognition (in DQ0)
+  // pattern recognition (in DQ0)
   if(!this->activated) {
     uint8_t nextPatternBit = (data & 0b00000001);
+
+    // does the current bit match the correct spot in the sequence?
+    if(this->getCurrentMagicBit() == nextPatternBit) {
+      this->magicSeqOffset++;
+
+      // did we match all 64 bits of the sequence?
+      if(this->magicSeqOffset == 64) {
+        LOG(INFO) << "RTC phanthom clock activated";
+
+        this->bitsToShift = 64;
+        this->activated = true;
+      }
+    }
+    // if not, reset sequence
+    else {
+      this->magicSeqOffset = 0;
+    }
+  }
+  // handle writing to RTC registers
+  else {
+    // take it one bit at a time
+    uint8_t dataBit = (data & 0b00000001);
+
+    // decrement counter
+    if(--this->bitsToShift <= 0) {
+      LOG(INFO) << "Wrote 64 bits of data, deactivating phanthom clock";
+      this->activated = false;
+    }
   }
 }
 /**
@@ -62,7 +90,8 @@ uint32_t DS1244::busRead(uint32_t addr, bus_size_t size) {
     // TODO: shift out a bit
 
     // if no bits left, return to normal mode
-    if(this->bitsToShift <= 0) {
+    if(--this->bitsToShift <= 0) {
+      LOG(INFO) << "Read 64 bits of data, deactivating phanthom clock";
       this->activated = false;
     }
   }

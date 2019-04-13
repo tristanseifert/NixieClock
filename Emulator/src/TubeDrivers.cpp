@@ -8,7 +8,9 @@
 #include <glog/logging.h>
 
 /// log all register writes
-#define LOG_REG_WRITE     1
+#define LOG_REG_WRITE     0
+/// log channel state on writes
+#define LOG_CHANNEL_STATE 0
 
 /**
  * Initializes the tube drivers
@@ -70,7 +72,9 @@ void TubeDrivers::busWrite(uint32_t addr, uint32_t data, bus_size_t size) {
       break;
   }
 
+#if LOG_CHANNEL_STATE
   VLOG(2) << *this;
+#endif
 }
 /**
  * Reads are not implemented.

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="9.2.1">
+<eagle version="9.3.2">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -17466,7 +17466,7 @@ Based on the following sources:
 <rectangle x1="2.921" y1="1.9558" x2="3.429" y2="3.0988" layer="51"/>
 <rectangle x1="4.191" y1="1.9558" x2="4.699" y2="3.0988" layer="51"/>
 </package>
-<package name="SO14" urn="urn:adsk.eagle:footprint:1630/1" library_version="1">
+<package name="SO14" urn="urn:adsk.eagle:footprint:970/1" library_version="3">
 <description>&lt;b&gt;Small Outline package&lt;/b&gt; 150 mil</description>
 <wire x1="4.064" y1="1.9558" x2="-4.064" y2="1.9558" width="0.1524" layer="51"/>
 <wire x1="4.064" y1="-1.9558" x2="4.445" y2="-1.5748" width="0.1524" layer="21" curve="90"/>
@@ -17511,32 +17511,7 @@ Based on the following sources:
 <rectangle x1="2.286" y1="-3.0988" x2="2.794" y2="-1.9558" layer="51"/>
 <rectangle x1="3.556" y1="-3.0988" x2="4.064" y2="-1.9558" layer="51"/>
 </package>
-<package name="DIL14" urn="urn:adsk.eagle:footprint:1631/1" library_version="1">
-<description>&lt;b&gt;Dual In Line Package&lt;/b&gt;</description>
-<wire x1="8.89" y1="2.921" x2="-8.89" y2="2.921" width="0.1524" layer="21"/>
-<wire x1="-8.89" y1="-2.921" x2="8.89" y2="-2.921" width="0.1524" layer="21"/>
-<wire x1="8.89" y1="2.921" x2="8.89" y2="-2.921" width="0.1524" layer="21"/>
-<wire x1="-8.89" y1="2.921" x2="-8.89" y2="1.016" width="0.1524" layer="21"/>
-<wire x1="-8.89" y1="-2.921" x2="-8.89" y2="-1.016" width="0.1524" layer="21"/>
-<wire x1="-8.89" y1="1.016" x2="-8.89" y2="-1.016" width="0.1524" layer="21" curve="-180"/>
-<pad name="1" x="-7.62" y="-3.81" drill="0.8128" shape="long" rot="R90"/>
-<pad name="2" x="-5.08" y="-3.81" drill="0.8128" shape="long" rot="R90"/>
-<pad name="7" x="7.62" y="-3.81" drill="0.8128" shape="long" rot="R90"/>
-<pad name="8" x="7.62" y="3.81" drill="0.8128" shape="long" rot="R90"/>
-<pad name="3" x="-2.54" y="-3.81" drill="0.8128" shape="long" rot="R90"/>
-<pad name="4" x="0" y="-3.81" drill="0.8128" shape="long" rot="R90"/>
-<pad name="6" x="5.08" y="-3.81" drill="0.8128" shape="long" rot="R90"/>
-<pad name="5" x="2.54" y="-3.81" drill="0.8128" shape="long" rot="R90"/>
-<pad name="9" x="5.08" y="3.81" drill="0.8128" shape="long" rot="R90"/>
-<pad name="10" x="2.54" y="3.81" drill="0.8128" shape="long" rot="R90"/>
-<pad name="11" x="0" y="3.81" drill="0.8128" shape="long" rot="R90"/>
-<pad name="12" x="-2.54" y="3.81" drill="0.8128" shape="long" rot="R90"/>
-<pad name="13" x="-5.08" y="3.81" drill="0.8128" shape="long" rot="R90"/>
-<pad name="14" x="-7.62" y="3.81" drill="0.8128" shape="long" rot="R90"/>
-<text x="-9.271" y="-3.048" size="1.27" layer="25" ratio="10" rot="R90">&gt;NAME</text>
-<text x="-6.731" y="-0.635" size="1.27" layer="27" ratio="10">&gt;VALUE</text>
-</package>
-<package name="DIL16" urn="urn:adsk.eagle:footprint:1635/1" library_version="1">
+<package name="DIL16" urn="urn:adsk.eagle:footprint:917/1" library_version="3">
 <description>&lt;b&gt;Dual In Line Package&lt;/b&gt;</description>
 <wire x1="10.16" y1="2.921" x2="-10.16" y2="2.921" width="0.1524" layer="21"/>
 <wire x1="-10.16" y1="-2.921" x2="10.16" y2="-2.921" width="0.1524" layer="21"/>
@@ -17563,7 +17538,32 @@ Based on the following sources:
 <text x="-10.541" y="-2.921" size="1.27" layer="25" ratio="10" rot="R90">&gt;NAME</text>
 <text x="-7.493" y="-0.635" size="1.27" layer="27" ratio="10">&gt;VALUE</text>
 </package>
-<package name="DIL20" urn="urn:adsk.eagle:footprint:1731/1" library_version="1">
+<package name="DIL14" urn="urn:adsk.eagle:footprint:16136/1" library_version="3">
+<description>&lt;b&gt;Dual In Line Package&lt;/b&gt;</description>
+<wire x1="8.89" y1="2.921" x2="-8.89" y2="2.921" width="0.1524" layer="21"/>
+<wire x1="-8.89" y1="-2.921" x2="8.89" y2="-2.921" width="0.1524" layer="21"/>
+<wire x1="8.89" y1="2.921" x2="8.89" y2="-2.921" width="0.1524" layer="21"/>
+<wire x1="-8.89" y1="2.921" x2="-8.89" y2="1.016" width="0.1524" layer="21"/>
+<wire x1="-8.89" y1="-2.921" x2="-8.89" y2="-1.016" width="0.1524" layer="21"/>
+<wire x1="-8.89" y1="1.016" x2="-8.89" y2="-1.016" width="0.1524" layer="21" curve="-180"/>
+<pad name="1" x="-7.62" y="-3.81" drill="0.8128" shape="long" rot="R90"/>
+<pad name="2" x="-5.08" y="-3.81" drill="0.8128" shape="long" rot="R90"/>
+<pad name="7" x="7.62" y="-3.81" drill="0.8128" shape="long" rot="R90"/>
+<pad name="8" x="7.62" y="3.81" drill="0.8128" shape="long" rot="R90"/>
+<pad name="3" x="-2.54" y="-3.81" drill="0.8128" shape="long" rot="R90"/>
+<pad name="4" x="0" y="-3.81" drill="0.8128" shape="long" rot="R90"/>
+<pad name="6" x="5.08" y="-3.81" drill="0.8128" shape="long" rot="R90"/>
+<pad name="5" x="2.54" y="-3.81" drill="0.8128" shape="long" rot="R90"/>
+<pad name="9" x="5.08" y="3.81" drill="0.8128" shape="long" rot="R90"/>
+<pad name="10" x="2.54" y="3.81" drill="0.8128" shape="long" rot="R90"/>
+<pad name="11" x="0" y="3.81" drill="0.8128" shape="long" rot="R90"/>
+<pad name="12" x="-2.54" y="3.81" drill="0.8128" shape="long" rot="R90"/>
+<pad name="13" x="-5.08" y="3.81" drill="0.8128" shape="long" rot="R90"/>
+<pad name="14" x="-7.62" y="3.81" drill="0.8128" shape="long" rot="R90"/>
+<text x="-9.271" y="-3.048" size="1.27" layer="25" ratio="10" rot="R90">&gt;NAME</text>
+<text x="-6.731" y="-0.635" size="1.27" layer="27" ratio="10">&gt;VALUE</text>
+</package>
+<package name="DIL20" urn="urn:adsk.eagle:footprint:16206/1" library_version="3">
 <description>&lt;b&gt;Dual In Line Package&lt;/b&gt;</description>
 <wire x1="12.7" y1="2.921" x2="-12.7" y2="2.921" width="0.1524" layer="21"/>
 <wire x1="-12.7" y1="-2.921" x2="12.7" y2="-2.921" width="0.1524" layer="21"/>
@@ -17596,7 +17596,7 @@ Based on the following sources:
 </package>
 </packages>
 <packages3d>
-<package3d name="SO20W" urn="urn:adsk.eagle:package:2018/1" type="box" library_version="2">
+<package3d name="SO20W" urn="urn:adsk.eagle:package:2018/2" type="model" library_version="3">
 <description>Wide Small Outline package 300 mil</description>
 <packageinstances>
 <packageinstance name="SO20W"/>
@@ -17614,25 +17614,25 @@ Based on the following sources:
 <packageinstance name="SO16"/>
 </packageinstances>
 </package3d>
-<package3d name="SO14" urn="urn:adsk.eagle:package:2007/1" type="box" library_version="1">
+<package3d name="SO14" urn="urn:adsk.eagle:package:1010/2" type="model" library_version="3">
 <description>Small Outline package 150 mil</description>
 <packageinstances>
 <packageinstance name="SO14"/>
 </packageinstances>
 </package3d>
-<package3d name="DIL14" urn="urn:adsk.eagle:package:2008/1" type="box" library_version="1">
-<description>Dual In Line Package</description>
-<packageinstances>
-<packageinstance name="DIL14"/>
-</packageinstances>
-</package3d>
-<package3d name="DIL16" urn="urn:adsk.eagle:package:2009/1" type="box" library_version="1">
+<package3d name="DIL16" urn="urn:adsk.eagle:package:922/2" type="model" library_version="3">
 <description>Dual In Line Package</description>
 <packageinstances>
 <packageinstance name="DIL16"/>
 </packageinstances>
 </package3d>
-<package3d name="DIL20" urn="urn:adsk.eagle:package:2017/1" type="box" library_version="1">
+<package3d name="DIL14" urn="urn:adsk.eagle:package:16407/2" type="model" library_version="3">
+<description>Dual In Line Package</description>
+<packageinstances>
+<packageinstance name="DIL14"/>
+</packageinstances>
+</package3d>
+<package3d name="DIL20" urn="urn:adsk.eagle:package:16429/2" type="model" library_version="3">
 <description>Dual In Line Package</description>
 <packageinstances>
 <packageinstance name="DIL20"/>
@@ -17640,31 +17640,31 @@ Based on the following sources:
 </package3d>
 </packages3d>
 <symbols>
-<symbol name="74373" urn="urn:adsk.eagle:symbol:1776/1" library_version="2">
+<symbol name="74573" urn="urn:adsk.eagle:symbol:1916/1" library_version="3">
 <wire x1="-7.62" y1="-15.24" x2="7.62" y2="-15.24" width="0.4064" layer="94"/>
 <wire x1="7.62" y1="-15.24" x2="7.62" y2="15.24" width="0.4064" layer="94"/>
 <wire x1="7.62" y1="15.24" x2="-7.62" y2="15.24" width="0.4064" layer="94"/>
 <wire x1="-7.62" y1="15.24" x2="-7.62" y2="-15.24" width="0.4064" layer="94"/>
 <text x="-7.62" y="15.875" size="1.778" layer="95">&gt;NAME</text>
 <text x="-7.62" y="-17.78" size="1.778" layer="96">&gt;VALUE</text>
-<pin name="OC" x="-12.7" y="-10.16" length="middle" direction="in" function="dot"/>
-<pin name="1Q" x="12.7" y="12.7" length="middle" direction="hiz" rot="R180"/>
+<pin name="OC" x="-12.7" y="-12.7" length="middle" direction="in" function="dot"/>
 <pin name="1D" x="-12.7" y="12.7" length="middle" direction="in"/>
 <pin name="2D" x="-12.7" y="10.16" length="middle" direction="in"/>
-<pin name="2Q" x="12.7" y="10.16" length="middle" direction="hiz" rot="R180"/>
-<pin name="3Q" x="12.7" y="7.62" length="middle" direction="hiz" rot="R180"/>
 <pin name="3D" x="-12.7" y="7.62" length="middle" direction="in"/>
 <pin name="4D" x="-12.7" y="5.08" length="middle" direction="in"/>
-<pin name="4Q" x="12.7" y="5.08" length="middle" direction="hiz" rot="R180"/>
-<pin name="ENC" x="-12.7" y="-12.7" length="middle" direction="in"/>
-<pin name="5Q" x="12.7" y="2.54" length="middle" direction="hiz" rot="R180"/>
 <pin name="5D" x="-12.7" y="2.54" length="middle" direction="in"/>
 <pin name="6D" x="-12.7" y="0" length="middle" direction="in"/>
-<pin name="6Q" x="12.7" y="0" length="middle" direction="hiz" rot="R180"/>
-<pin name="7Q" x="12.7" y="-2.54" length="middle" direction="hiz" rot="R180"/>
 <pin name="7D" x="-12.7" y="-2.54" length="middle" direction="in"/>
 <pin name="8D" x="-12.7" y="-5.08" length="middle" direction="in"/>
+<pin name="C" x="-12.7" y="-10.16" length="middle" direction="in"/>
 <pin name="8Q" x="12.7" y="-5.08" length="middle" direction="hiz" rot="R180"/>
+<pin name="7Q" x="12.7" y="-2.54" length="middle" direction="hiz" rot="R180"/>
+<pin name="6Q" x="12.7" y="0" length="middle" direction="hiz" rot="R180"/>
+<pin name="5Q" x="12.7" y="2.54" length="middle" direction="hiz" rot="R180"/>
+<pin name="4Q" x="12.7" y="5.08" length="middle" direction="hiz" rot="R180"/>
+<pin name="3Q" x="12.7" y="7.62" length="middle" direction="hiz" rot="R180"/>
+<pin name="2Q" x="12.7" y="10.16" length="middle" direction="hiz" rot="R180"/>
+<pin name="1Q" x="12.7" y="12.7" length="middle" direction="hiz" rot="R180"/>
 </symbol>
 <symbol name="PWRN" urn="urn:adsk.eagle:symbol:1632/1" library_version="2">
 <text x="-0.635" y="-0.635" size="1.778" layer="95">&gt;NAME</text>
@@ -17730,119 +17730,83 @@ Based on the following sources:
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="74*373" urn="urn:adsk.eagle:component:2316/1" prefix="IC" library_version="1">
-<description>Octal D type transparent &lt;b&gt;LATCH&lt;/b&gt;, edge triggered</description>
+<deviceset name="74*573" urn="urn:adsk.eagle:component:2338/3" prefix="IC" library_version="3">
+<description>8-bit D latch &lt;b&gt;BUS DRIVER&lt;/b&gt;</description>
 <gates>
-<gate name="A" symbol="74373" x="20.32" y="0"/>
+<gate name="A" symbol="74573" x="20.32" y="0"/>
 <gate name="P" symbol="PWRN" x="-5.08" y="0" addlevel="request"/>
 </gates>
 <devices>
 <device name="N" package="DIL20">
 <connects>
-<connect gate="A" pin="1D" pad="3"/>
-<connect gate="A" pin="1Q" pad="2"/>
-<connect gate="A" pin="2D" pad="4"/>
-<connect gate="A" pin="2Q" pad="5"/>
-<connect gate="A" pin="3D" pad="7"/>
-<connect gate="A" pin="3Q" pad="6"/>
-<connect gate="A" pin="4D" pad="8"/>
-<connect gate="A" pin="4Q" pad="9"/>
-<connect gate="A" pin="5D" pad="13"/>
-<connect gate="A" pin="5Q" pad="12"/>
-<connect gate="A" pin="6D" pad="14"/>
-<connect gate="A" pin="6Q" pad="15"/>
-<connect gate="A" pin="7D" pad="17"/>
-<connect gate="A" pin="7Q" pad="16"/>
-<connect gate="A" pin="8D" pad="18"/>
-<connect gate="A" pin="8Q" pad="19"/>
-<connect gate="A" pin="ENC" pad="11"/>
+<connect gate="A" pin="1D" pad="2"/>
+<connect gate="A" pin="1Q" pad="19"/>
+<connect gate="A" pin="2D" pad="3"/>
+<connect gate="A" pin="2Q" pad="18"/>
+<connect gate="A" pin="3D" pad="4"/>
+<connect gate="A" pin="3Q" pad="17"/>
+<connect gate="A" pin="4D" pad="5"/>
+<connect gate="A" pin="4Q" pad="16"/>
+<connect gate="A" pin="5D" pad="6"/>
+<connect gate="A" pin="5Q" pad="15"/>
+<connect gate="A" pin="6D" pad="7"/>
+<connect gate="A" pin="6Q" pad="14"/>
+<connect gate="A" pin="7D" pad="8"/>
+<connect gate="A" pin="7Q" pad="13"/>
+<connect gate="A" pin="8D" pad="9"/>
+<connect gate="A" pin="8Q" pad="12"/>
+<connect gate="A" pin="C" pad="11"/>
 <connect gate="A" pin="OC" pad="1"/>
 <connect gate="P" pin="GND" pad="10"/>
 <connect gate="P" pin="VCC" pad="20"/>
 </connects>
 <package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:2017/1"/>
+<package3dinstance package3d_urn="urn:adsk.eagle:package:16429/2"/>
 </package3dinstances>
 <technologies>
 <technology name="AC"/>
 <technology name="ACT"/>
-<technology name="HC"/>
-<technology name="HCT"/>
-<technology name="LS"/>
-<technology name="S"/>
-</technologies>
-</device>
-<device name="DW" package="SO20W">
-<connects>
-<connect gate="A" pin="1D" pad="3"/>
-<connect gate="A" pin="1Q" pad="2"/>
-<connect gate="A" pin="2D" pad="4"/>
-<connect gate="A" pin="2Q" pad="5"/>
-<connect gate="A" pin="3D" pad="7"/>
-<connect gate="A" pin="3Q" pad="6"/>
-<connect gate="A" pin="4D" pad="8"/>
-<connect gate="A" pin="4Q" pad="9"/>
-<connect gate="A" pin="5D" pad="13"/>
-<connect gate="A" pin="5Q" pad="12"/>
-<connect gate="A" pin="6D" pad="14"/>
-<connect gate="A" pin="6Q" pad="15"/>
-<connect gate="A" pin="7D" pad="17"/>
-<connect gate="A" pin="7Q" pad="16"/>
-<connect gate="A" pin="8D" pad="18"/>
-<connect gate="A" pin="8Q" pad="19"/>
-<connect gate="A" pin="ENC" pad="11"/>
-<connect gate="A" pin="OC" pad="1"/>
-<connect gate="P" pin="GND" pad="10"/>
-<connect gate="P" pin="VCC" pad="20"/>
-</connects>
-<package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:2018/1"/>
-</package3dinstances>
-<technologies>
-<technology name="AC"/>
-<technology name="ACT"/>
+<technology name="AS"/>
 <technology name="HC"/>
 <technology name="HCT"/>
 </technologies>
 </device>
-<device name="FK" package="LCC20">
+<device name="D" package="SO20W">
 <connects>
-<connect gate="A" pin="1D" pad="3"/>
-<connect gate="A" pin="1Q" pad="2"/>
-<connect gate="A" pin="2D" pad="4"/>
-<connect gate="A" pin="2Q" pad="5"/>
-<connect gate="A" pin="3D" pad="7"/>
-<connect gate="A" pin="3Q" pad="6"/>
-<connect gate="A" pin="4D" pad="8"/>
-<connect gate="A" pin="4Q" pad="9"/>
-<connect gate="A" pin="5D" pad="13"/>
-<connect gate="A" pin="5Q" pad="12"/>
-<connect gate="A" pin="6D" pad="14"/>
-<connect gate="A" pin="6Q" pad="15"/>
-<connect gate="A" pin="7D" pad="17"/>
-<connect gate="A" pin="7Q" pad="16"/>
-<connect gate="A" pin="8D" pad="18"/>
-<connect gate="A" pin="8Q" pad="19"/>
-<connect gate="A" pin="ENC" pad="11"/>
+<connect gate="A" pin="1D" pad="2"/>
+<connect gate="A" pin="1Q" pad="19"/>
+<connect gate="A" pin="2D" pad="3"/>
+<connect gate="A" pin="2Q" pad="18"/>
+<connect gate="A" pin="3D" pad="4"/>
+<connect gate="A" pin="3Q" pad="17"/>
+<connect gate="A" pin="4D" pad="5"/>
+<connect gate="A" pin="4Q" pad="16"/>
+<connect gate="A" pin="5D" pad="6"/>
+<connect gate="A" pin="5Q" pad="15"/>
+<connect gate="A" pin="6D" pad="7"/>
+<connect gate="A" pin="6Q" pad="14"/>
+<connect gate="A" pin="7D" pad="8"/>
+<connect gate="A" pin="7Q" pad="13"/>
+<connect gate="A" pin="8D" pad="9"/>
+<connect gate="A" pin="8Q" pad="12"/>
+<connect gate="A" pin="C" pad="11"/>
 <connect gate="A" pin="OC" pad="1"/>
 <connect gate="P" pin="GND" pad="10"/>
 <connect gate="P" pin="VCC" pad="20"/>
 </connects>
 <package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:2012/1"/>
+<package3dinstance package3d_urn="urn:adsk.eagle:package:2018/2"/>
 </package3dinstances>
 <technologies>
 <technology name="AC"/>
 <technology name="ACT"/>
 <technology name="HC"/>
 <technology name="HCT"/>
-<technology name="LS"/>
-<technology name="S"/>
 </technologies>
 </device>
 </devices>
 </deviceset>
-<deviceset name="74*85" urn="urn:adsk.eagle:component:2145/1" prefix="IC" library_version="1">
+<deviceset name="74*85" urn="urn:adsk.eagle:component:2145/2" prefix="IC" library_version="3">
 <description>4-bit magnitude &lt;b&gt;COMPARATOR&lt;/b&gt;</description>
 <gates>
 <gate name="A" symbol="7485" x="22.86" y="0"/>
@@ -17869,7 +17833,7 @@ Based on the following sources:
 <connect gate="P" pin="VCC" pad="16"/>
 </connects>
 <package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:2009/1"/>
+<package3dinstance package3d_urn="urn:adsk.eagle:package:922/2"/>
 </package3dinstances>
 <technologies>
 <technology name=""/>
@@ -17939,7 +17903,7 @@ Based on the following sources:
 </device>
 </devices>
 </deviceset>
-<deviceset name="74*04" urn="urn:adsk.eagle:component:2139/1" prefix="IC" library_version="1">
+<deviceset name="74*04" urn="urn:adsk.eagle:component:2139/2" prefix="IC" library_version="3">
 <description>Hex &lt;b&gt;INVERTER&lt;/b&gt;</description>
 <gates>
 <gate name="A" symbol="7404" x="17.78" y="0" swaplevel="1"/>
@@ -17969,7 +17933,7 @@ Based on the following sources:
 <connect gate="P" pin="VCC" pad="14"/>
 </connects>
 <package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:2008/1"/>
+<package3dinstance package3d_urn="urn:adsk.eagle:package:16407/2"/>
 </package3dinstances>
 <technologies>
 <technology name=""/>
@@ -18001,7 +17965,7 @@ Based on the following sources:
 <connect gate="P" pin="VCC" pad="14"/>
 </connects>
 <package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:2007/1"/>
+<package3dinstance package3d_urn="urn:adsk.eagle:package:1010/2"/>
 </package3dinstances>
 <technologies>
 <technology name=""/>
@@ -18047,7 +18011,7 @@ Based on the following sources:
 </device>
 </devices>
 </deviceset>
-<deviceset name="74*08" urn="urn:adsk.eagle:component:2200/1" prefix="IC" library_version="1">
+<deviceset name="74*08" urn="urn:adsk.eagle:component:2200/2" prefix="IC" library_version="3">
 <description>Quad 2-input &lt;b&gt;AND&lt;/b&gt; gate</description>
 <gates>
 <gate name="A" symbol="7408" x="20.32" y="0" swaplevel="1"/>
@@ -18075,7 +18039,7 @@ Based on the following sources:
 <connect gate="P" pin="VCC" pad="14"/>
 </connects>
 <package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:2008/1"/>
+<package3dinstance package3d_urn="urn:adsk.eagle:package:16407/2"/>
 </package3dinstances>
 <technologies>
 <technology name="AC"/>
@@ -18106,7 +18070,7 @@ Based on the following sources:
 <connect gate="P" pin="VCC" pad="14"/>
 </connects>
 <package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:2007/1"/>
+<package3dinstance package3d_urn="urn:adsk.eagle:package:1010/2"/>
 </package3dinstances>
 <technologies>
 <technology name="AC"/>
@@ -18152,7 +18116,7 @@ Based on the following sources:
 </device>
 </devices>
 </deviceset>
-<deviceset name="74*139" urn="urn:adsk.eagle:component:2152/1" prefix="IC" library_version="1">
+<deviceset name="74*139" urn="urn:adsk.eagle:component:2152/2" prefix="IC" library_version="3">
 <description>Dual 2-line to 4-line &lt;b&gt;DECODER/DEMULTIPLEXER&lt;/b&gt;</description>
 <gates>
 <gate name="A" symbol="74139" x="20.32" y="0" swaplevel="1"/>
@@ -18180,7 +18144,7 @@ Based on the following sources:
 <connect gate="P" pin="VCC" pad="16"/>
 </connects>
 <package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:2009/1"/>
+<package3dinstance package3d_urn="urn:adsk.eagle:package:922/2"/>
 </package3dinstances>
 <technologies>
 <technology name="AC"/>
@@ -21503,11 +21467,11 @@ Source: www.kingbright.com</description>
 <part name="GND10" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="P+5" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="GND12" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
-<part name="IC1" library="74xx-eu" library_urn="urn:adsk.eagle:library:85" deviceset="74*373" device="DW" package3d_urn="urn:adsk.eagle:package:2018/1" technology="HC"/>
+<part name="IC1" library="74xx-eu" library_urn="urn:adsk.eagle:library:85" deviceset="74*573" device="D" package3d_urn="urn:adsk.eagle:package:2018/2" technology="HC"/>
 <part name="P+7" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="GND14" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="GND1" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
-<part name="IC2" library="74xx-eu" library_urn="urn:adsk.eagle:library:85" deviceset="74*373" device="DW" package3d_urn="urn:adsk.eagle:package:2018/1" technology="HC"/>
+<part name="IC2" library="74xx-eu" library_urn="urn:adsk.eagle:library:85" deviceset="74*573" device="D" package3d_urn="urn:adsk.eagle:package:2018/2" technology="HC"/>
 <part name="GND2" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="IC3" library="74xx-eu" library_urn="urn:adsk.eagle:library:85" deviceset="74*85" device="D" package3d_urn="urn:adsk.eagle:package:2010/1" technology="HC">
 <attribute name="MOUSER" value="771-74HC85D-T"/>
@@ -21517,8 +21481,8 @@ Source: www.kingbright.com</description>
 <part name="GND5" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="GND6" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="P+1" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
-<part name="IC5" library="74xx-eu" library_urn="urn:adsk.eagle:library:85" deviceset="74*04" device="D" package3d_urn="urn:adsk.eagle:package:2007/1" technology="HC"/>
-<part name="IC4" library="74xx-eu" library_urn="urn:adsk.eagle:library:85" deviceset="74*08" device="D" package3d_urn="urn:adsk.eagle:package:2007/1" technology="HC"/>
+<part name="IC5" library="74xx-eu" library_urn="urn:adsk.eagle:library:85" deviceset="74*04" device="D" package3d_urn="urn:adsk.eagle:package:1010/2" technology="HC"/>
+<part name="IC4" library="74xx-eu" library_urn="urn:adsk.eagle:library:85" deviceset="74*08" device="D" package3d_urn="urn:adsk.eagle:package:1010/2" technology="HC"/>
 <part name="C3" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-EU" device="C1206" package3d_urn="urn:adsk.eagle:package:23618/2" value="100nF"/>
 <part name="S1" library="switch-dil" library_urn="urn:adsk.eagle:library:375" deviceset="SD4-03" device="" package3d_urn="urn:adsk.eagle:package:27238/1">
 <attribute name="MOUSER" value="611-BDB03"/>
@@ -21579,7 +21543,7 @@ Source: www.kingbright.com</description>
 <part name="IC7" library="74xx-eu" library_urn="urn:adsk.eagle:library:85" deviceset="74*139" device="D" package3d_urn="urn:adsk.eagle:package:2010/1" technology="HC">
 <attribute name="MOUSER" value="771-HC139D652"/>
 </part>
-<part name="IC8" library="74xx-eu" library_urn="urn:adsk.eagle:library:85" deviceset="74*373" device="DW" package3d_urn="urn:adsk.eagle:package:2018/1" technology="HC"/>
+<part name="IC8" library="74xx-eu" library_urn="urn:adsk.eagle:library:85" deviceset="74*573" device="D" package3d_urn="urn:adsk.eagle:package:2018/2" technology="HC"/>
 <part name="GND25" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="C9" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-EU" device="C1206" package3d_urn="urn:adsk.eagle:package:23618/2" value="100nF"/>
 </parts>
@@ -21984,11 +21948,11 @@ Source: www.kingbright.com</description>
 <junction x="223.52" y="139.7"/>
 </segment>
 <segment>
-<pinref part="IC1" gate="A" pin="OC"/>
+<pinref part="IC1" gate="A" pin="C"/>
 <pinref part="GND1" gate="1" pin="GND"/>
 </segment>
 <segment>
-<pinref part="IC2" gate="A" pin="OC"/>
+<pinref part="IC2" gate="A" pin="C"/>
 <pinref part="GND2" gate="1" pin="GND"/>
 </segment>
 <segment>
@@ -22342,7 +22306,7 @@ Source: www.kingbright.com</description>
 </net>
 <net name="DIGIT_LATCH" class="0">
 <segment>
-<pinref part="IC1" gate="A" pin="ENC"/>
+<pinref part="IC1" gate="A" pin="OC"/>
 <wire x1="15.24" y1="142.24" x2="10.16" y2="142.24" width="0.1524" layer="91"/>
 <wire x1="10.16" y1="142.24" x2="7.62" y2="144.78" width="0.1524" layer="91"/>
 </segment>
@@ -22354,7 +22318,7 @@ Source: www.kingbright.com</description>
 </net>
 <net name="CONTROL_LATCH" class="0">
 <segment>
-<pinref part="IC2" gate="A" pin="ENC"/>
+<pinref part="IC2" gate="A" pin="OC"/>
 <wire x1="15.24" y1="104.14" x2="10.16" y2="104.14" width="0.1524" layer="91"/>
 <wire x1="10.16" y1="104.14" x2="7.62" y2="106.68" width="0.1524" layer="91"/>
 </segment>
@@ -22795,7 +22759,7 @@ Source: www.kingbright.com</description>
 <pinref part="GND24" gate="1" pin="GND"/>
 </segment>
 <segment>
-<pinref part="IC8" gate="A" pin="OC"/>
+<pinref part="IC8" gate="A" pin="C"/>
 <pinref part="GND25" gate="1" pin="GND"/>
 </segment>
 </net>
@@ -22853,50 +22817,50 @@ Source: www.kingbright.com</description>
 </net>
 <net name="PWM_D3" class="0">
 <segment>
-<pinref part="IC6" gate="G$1" pin="PB7"/>
-<wire x1="109.22" y1="20.32" x2="114.3" y2="20.32" width="0.1524" layer="91"/>
-<label x="114.3" y="20.32" size="1.778" layer="95" xref="yes"/>
-</segment>
-<segment>
 <pinref part="IC8" gate="A" pin="4Q"/>
 <wire x1="43.18" y1="104.14" x2="48.26" y2="104.14" width="0.1524" layer="91"/>
 <label x="48.26" y="104.14" size="1.778" layer="95" xref="yes"/>
 </segment>
-</net>
-<net name="PWM_D2" class="0">
-<segment>
-<pinref part="IC6" gate="G$1" pin="PB6"/>
-<wire x1="109.22" y1="22.86" x2="114.3" y2="22.86" width="0.1524" layer="91"/>
-<label x="114.3" y="22.86" size="1.778" layer="95" xref="yes"/>
-</segment>
-<segment>
-<pinref part="IC8" gate="A" pin="3Q"/>
-<wire x1="43.18" y1="106.68" x2="48.26" y2="106.68" width="0.1524" layer="91"/>
-<label x="48.26" y="106.68" size="1.778" layer="95" xref="yes"/>
-</segment>
-</net>
-<net name="PWM_D1" class="0">
-<segment>
-<pinref part="IC6" gate="G$1" pin="PB5"/>
-<wire x1="109.22" y1="25.4" x2="114.3" y2="25.4" width="0.1524" layer="91"/>
-<label x="114.3" y="25.4" size="1.778" layer="95" xref="yes"/>
-</segment>
-<segment>
-<pinref part="IC8" gate="A" pin="2Q"/>
-<wire x1="43.18" y1="109.22" x2="48.26" y2="109.22" width="0.1524" layer="91"/>
-<label x="48.26" y="109.22" size="1.778" layer="95" xref="yes"/>
-</segment>
-</net>
-<net name="PWM_D0" class="0">
 <segment>
 <pinref part="IC6" gate="G$1" pin="PB4"/>
 <wire x1="109.22" y1="27.94" x2="114.3" y2="27.94" width="0.1524" layer="91"/>
 <label x="114.3" y="27.94" size="1.778" layer="95" xref="yes"/>
 </segment>
+</net>
+<net name="PWM_D2" class="0">
+<segment>
+<pinref part="IC8" gate="A" pin="3Q"/>
+<wire x1="43.18" y1="106.68" x2="48.26" y2="106.68" width="0.1524" layer="91"/>
+<label x="48.26" y="106.68" size="1.778" layer="95" xref="yes"/>
+</segment>
+<segment>
+<pinref part="IC6" gate="G$1" pin="PB5"/>
+<wire x1="109.22" y1="25.4" x2="114.3" y2="25.4" width="0.1524" layer="91"/>
+<label x="114.3" y="25.4" size="1.778" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="PWM_D1" class="0">
+<segment>
+<pinref part="IC8" gate="A" pin="2Q"/>
+<wire x1="43.18" y1="109.22" x2="48.26" y2="109.22" width="0.1524" layer="91"/>
+<label x="48.26" y="109.22" size="1.778" layer="95" xref="yes"/>
+</segment>
+<segment>
+<pinref part="IC6" gate="G$1" pin="PB6"/>
+<wire x1="109.22" y1="22.86" x2="114.3" y2="22.86" width="0.1524" layer="91"/>
+<label x="114.3" y="22.86" size="1.778" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="PWM_D0" class="0">
 <segment>
 <pinref part="IC8" gate="A" pin="1Q"/>
 <wire x1="43.18" y1="111.76" x2="48.26" y2="111.76" width="0.1524" layer="91"/>
 <label x="48.26" y="111.76" size="1.778" layer="95" xref="yes"/>
+</segment>
+<segment>
+<pinref part="IC6" gate="G$1" pin="PB7"/>
+<wire x1="109.22" y1="20.32" x2="114.3" y2="20.32" width="0.1524" layer="91"/>
+<label x="114.3" y="20.32" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="+5V" class="0">
@@ -23029,7 +22993,7 @@ Source: www.kingbright.com</description>
 </net>
 <net name="PWM_LATCH" class="0">
 <segment>
-<pinref part="IC8" gate="A" pin="ENC"/>
+<pinref part="IC8" gate="A" pin="OC"/>
 <wire x1="17.78" y1="86.36" x2="12.7" y2="86.36" width="0.1524" layer="91"/>
 <wire x1="12.7" y1="86.36" x2="10.16" y2="88.9" width="0.1524" layer="91"/>
 </segment>
